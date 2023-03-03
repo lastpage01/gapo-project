@@ -1,6 +1,7 @@
 import {
   createTaskByEmailAndDate,
   deleteTaskById,
+  moveTaskByIdAndVtNew,
   retrieveTaskByEmailAndDate,
   updateTaskById,
 } from "../../services/tasks.service";
@@ -32,9 +33,18 @@ export function* deleteTask(action) {
 }
 
 export function* updateTask(action) {
-  const { id, title } = action.payload;
+  const { id, title, status } = action.payload;
   try {
-    yield call(updateTaskById, id, {title});
+    yield call(updateTaskById, id, { title, status });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function* moveTask(action) {
+  const { id, vtNew } = action.payload;
+  try {
+    yield call(moveTaskByIdAndVtNew, id, vtNew);
   } catch (e) {
     console.log(e);
   }

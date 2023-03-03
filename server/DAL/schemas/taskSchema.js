@@ -6,4 +6,5 @@ export const TaskSchema = new mongoose.Schema({
   date: Date,
   email: String,
   vt: Number,
+  status: Boolean,
 });

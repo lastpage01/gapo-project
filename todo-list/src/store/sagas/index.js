@@ -4,10 +4,11 @@ import {
   DELETE_TASK,
   LOGIN,
   LOGOUT,
+  MOVE_TASK,
   TASK,
   UPDATE_TASK,
 } from "../actions/types";
-import { deleteTask, task, updateTask } from "./task";
+import { deleteTask, moveTask, task, updateTask } from "./task";
 import { changName, login, logout } from "./user";
 
 function* root() {
@@ -17,6 +18,7 @@ function* root() {
   yield takeLatest(TASK, task);
   yield takeLatest(DELETE_TASK, deleteTask);
   yield takeLatest(UPDATE_TASK, updateTask);
+  yield takeLatest(MOVE_TASK, moveTask);
 }
 
 export default root;

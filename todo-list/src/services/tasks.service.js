@@ -28,3 +28,10 @@ export const updateTaskById = (id, task) => {
     data: task,
   });
 };
+
+export const moveTaskByIdAndVtNew = (id, vtNew) => {
+  return axios({
+    method: "put",
+    url: `http://localhost:3000/api/tasks/moveTask/${id}?vt=${vtNew}`,
+  });
+};

@@ -38,7 +38,7 @@ const firstAndLastArrMove = (vtOld, vtNew) => {
 /////////////////////
 
 export const getTaskById = (id) => {
-  return model.findById(id).exec();
+  return model.findById(id).limit(1).exec();
 };
 
 export const addNewTask = (newTask) => {
@@ -50,6 +50,7 @@ export const updateTask = (id, task) => {
       email: task.email,
       title: task.title,
       date: task.date,
+      status: task.status,
     },
   });
 };

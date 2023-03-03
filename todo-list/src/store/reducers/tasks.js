@@ -1,12 +1,12 @@
 import {
   CREATE_TASK,
   DELETE_TASK,
+  MOVE_TASK,
   RETRIEVE_TASK,
   UPDATE_TASK,
 } from "../actions/types";
 
 const initialState = [];
-
 function taskReducer(state = initialState, action) {
   const { type, payload } = action;
 
@@ -24,9 +24,12 @@ function taskReducer(state = initialState, action) {
           return {
             ...task,
             title: payload.title,
+            status: payload.status,
           };
         } else return task;
       });
+    case MOVE_TASK:
+      return [...state];
     default:
       return state;
   }

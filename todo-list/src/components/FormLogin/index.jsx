@@ -97,20 +97,6 @@ const SignIn = ({ setAppearSignIn }) => {
           Login
         </Button>
         <div className="line"></div>
-        {/* <div className="browser">
-          <div className="browser-fb">
-            <FaFacebookF />
-            <span>Facebook</span>
-          </div>
-          <div className="browser-tw">
-            <AiOutlineTwitter />
-            <span>Twitter</span>
-          </div>
-          <div className="browser-gg">
-            <IoLogoGoogleplus />
-            <span>Google</span>
-          </div>
-        </div> */}
         <Button
           size="medium"
           type="button"

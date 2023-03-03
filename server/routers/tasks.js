@@ -37,6 +37,7 @@ taskRouter.get("/dateAndEmail", (req, res) => {
 
 taskRouter.post("/", (req, res) => {
   const newTask = req.body;
+  newTask.status = false;
   getVTLastOfDateAndEmail(newTask.date, newTask.email)
     .then((data) => {
       newTask.vt = data.length ? data[0].vt + 1 : 1;
@@ -94,7 +95,7 @@ taskRouter.delete("/:id", (req, res) => {
 taskRouter.put("/moveTask/:id", (req, res) => {
   const { id } = req.params;
   const vtNew = Number(req.query.vt);
-  move(id, vtNew);
+  if (id && vtNew) move(id, vtNew);
   res.send("move success");
 });
 

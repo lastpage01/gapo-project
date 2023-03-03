@@ -1,4 +1,11 @@
-import { CREATE_TASK, DELETE_TASK, RETRIEVE_TASK, TASK, UPDATE_TASK } from "./types";
+import {
+  CREATE_TASK,
+  DELETE_TASK,
+  MOVE_TASK,
+  RETRIEVE_TASK,
+  TASK,
+  UPDATE_TASK,
+} from "./types";
 
 export const taskAction = (email, date, title) => {
   return {
@@ -28,9 +35,16 @@ export const deleteTaskAction = (id) => {
   };
 };
 
-export const updateTaskAction = (id, title) => {
+export const updateTaskAction = (id, title, status) => {
   return {
     type: UPDATE_TASK,
-    payload: { id, title },
+    payload: { id, title, status },
+  };
+};
+
+export const moveTaskAction = (id, vtNew, email, date) => {
+  return {
+    type: MOVE_TASK,
+    payload: { id, vtNew, email, date },
   };
 };

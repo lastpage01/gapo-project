@@ -1,5 +1,5 @@
 import { InputField } from "@gapo_ui/components";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "../../helpers/validator";
 import { taskAction } from "../../store/actions/tasks";
@@ -17,7 +17,6 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
   const date = `${fullDate.year}/${fullDate.month}/${fullDate.date}`;
 
   const { tasks } = useSelector((state) => state);
-
   useEffect(() => {
     dispatch(taskAction(email, date));
   }, [date, dispatch, email]);
@@ -33,8 +32,9 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
       }
     }
   };
-  const handleLosesFocus = () => {
+  const handleLosesFocus = (e) => {
     setIsErr(false);
+    if (e.target.value.trim()) setNewTask("");
     setHelper("");
   };
   const checkEmptyInput = () => {
@@ -55,6 +55,8 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
               id={task._id}
               setShowMessage={setShowMessage}
               setIdRemove={setIdRemove}
+              vt={task.vt}
+              status={task.status}
             />
           );
         })}
@@ -69,11 +71,10 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
           helperText={helper}
           error={isErr}
           onBlur={handleLosesFocus}
-          autoFocus={true}
         />
       </div>
     </div>
   );
 };
 
-export default Task;
+export default memo(Task);
