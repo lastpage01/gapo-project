@@ -1,0 +1,71 @@
+.wrapper-list-item {
+  width: 100%;
+}
+
+.wrapper-task-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* border: 1px solid black; */
+}
+.wrapper-task-item:hover {
+  border: 3px solid rgb(189, 203, 210);
+  background-color: rgb(223, 223, 223);;
+}
+.wrapper-task-item:hover > .line {
+  display: none;
+}
+.wrapper-task-item:hover > .task-item > .icon-vertical > .vertical {
+  display: block;
+}
+.wrapper-task-item:hover > .task-item .icon-delete {
+  display: block;
+}
+.wrapper-task-item > .task-item {
+  width: 100%;
+  display: flex;
+  padding: 10px 0;
+}
+
+.wrapper-task-item > .task-item > .icon-vertical {
+  margin: 0 20px;
+}
+.wrapper-task-item > .task-item > .icon-vertical > .vertical {
+  display: none;
+}
+.wrapper-task-item > .task-item > .icon-check-mark {
+  margin-right: 10px;
+}
+.wrapper-task-item > .task-item > .div-title {
+  width: 70%;
+}
+.wrapper-task-item > .task-item > .input-title {
+  display: none;
+  width: 70%;
+  outline-color: rgb(189, 203, 210);
+  border-radius: 5px;
+  border: none;
+}
+.wrapper-task-item > .task-item > .icon-delete {
+  display: none;
+  margin-left: 7%;
+  cursor: pointer;
+}
+
+.wrapper-task-item > .line {
+  border: 1px solid rgb(189, 203, 210);
+  width: 87%;
+}
+
+.check-mark-circle {
+  display: none;
+}
+
+.wrapper-list-item > .add-task {
+  width: 72%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-left: 100px;
+}

@@ -1,0 +1,14 @@
+.wrapper-setting {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.wrapper-setting > .content-setting {
+  width: 400px;
+}
+.wrapper-setting > .content-setting > .line {
+  background: #c4c4c4;
+  opacity: 0.4;
+  width: 90%;
+  height: 2px;
+}

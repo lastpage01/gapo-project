@@ -1,0 +1,46 @@
+.home-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  position: relative;
+}
+.wrapper-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.wrapper-task {
+  margin-top: 50px;
+  width: 50%;
+}
+.home-container > .wrapper-message-box {
+  background: rgba(196, 196, 196, 0.7);
+  position: absolute;
+  top: -60px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.home-container > .wrapper-message-box > .message-box {
+  background-color: white;
+  width: 500px;
+  height: 160px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 0 30px;
+  size: 24px;
+}
+.home-container > .wrapper-message-box > .message-box > .btn {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}

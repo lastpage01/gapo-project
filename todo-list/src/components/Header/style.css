@@ -1,0 +1,78 @@
+.wrapper-header {
+  box-sizing: border-box;
+  /* position: fixed; */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 70px;
+  background: #ffffff;
+  border: 0.05px solid #ffffff;
+  box-shadow: 6px 6px 9px rgba(0, 0, 0, 0.25);
+  color: rgba(75, 88, 124, 0.7);
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  height: 60px;
+}
+
+/*--------------------------*/
+.wrapper-header-left {
+  display: flex;
+  text-decoration: none;
+  color: rgba(75, 88, 124, 0.7);
+}
+.wrapper-header-left > .title {
+  font-size: 24px;
+  line-height: 28px;
+  margin-left: 10px;
+}
+
+/*--------------------------*/
+.wrapper-header-right {
+  display: flex;
+  position: relative;
+}
+
+.wrapper-header-right > .name {
+  font-size: 24px;
+  line-height: 28px;
+  margin-right: 10px;
+}
+.wrapper-header-right > .avatar {
+  cursor: pointer;
+}
+.wrapper-header-right > .user {
+  /* display: none; */
+  width: 137px;
+  height: 92px;
+  position: absolute;
+  top: 55px;
+  right: 0;
+  background: #fdfdfd;
+  border: 0.5px solid rgba(15, 82, 195, 0.5);
+  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  grid-template-rows: 1fr 1px 1fr;
+  justify-content: center;
+  align-items: center;
+}
+.setting,
+.signUp {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgba(75, 88, 124, 0.7);
+}
+
+.wrapper-header-right > .user span {
+  font-size: 16px;
+  line-height: 19px;
+  margin-left: 5px;
+}
+.wrapper-header-right > .user > .line {
+  width: 113px;
+  height: 1px;
+  background-color: gray;
+}

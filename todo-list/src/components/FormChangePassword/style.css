@@ -1,0 +1,28 @@
+.wrapper-changePassword {
+    width: 100%;
+  }
+  .wrapper-changePassword > .form-changePassword {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-changePassword > .form-changePassword > .title {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 35px;
+  }
+
+  .wrapper-changePassword > .form-changePassword >.wrapper-input{
+    width: 100%;
+    height: 100px;
+  }
+
+  .wrapper-changePassword > .form-changePassword > .btn-change {
+    width: 50%;
+    margin: 0 0 100px 0;
+  }
+  

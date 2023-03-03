@@ -1,0 +1,22 @@
+.wrapper-changeName {
+  width: 100%;
+}
+.wrapper-changeName > .form-changName {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wrapper-changeName > .form-changName > .title {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 35px;
+}
+.wrapper-changeName > .form-changName > .btn-save {
+  width: 50%;
+  margin: 20px 0;
+}
+
+
