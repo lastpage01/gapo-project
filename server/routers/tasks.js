@@ -95,30 +95,33 @@ taskRouter.delete("/:id", (req, res) => {
 taskRouter.put("/moveTask/:id", (req, res) => {
   const { id } = req.params;
   const vtNew = Number(req.query.vt);
-  if (id && vtNew) move(id, vtNew);
-  res.send("move success");
+  if (!!id && !!vtNew) move(id, vtNew, res);
+  else res.json({ moveSuccess: false });
 });
 
-const move = (id, vtNew) => {
+const move = (id, vtNew, res) => {
   getTaskById(id)
     .then((data) => {
-      const { date, email, vt } = data;
-      if (vt !== vtNew) {
-        moveVTBeforeOrAfter(date, email, vt, vtNew);
-        moveTask(id, vtNew).catch((err) => {
-          throw err;
+      if (data.vt !== vtNew) {
+        moveVTBeforeOrAfter(data, vtNew).then(() => {
+          moveTask(id, vtNew)
+            .then((data) => {
+              res.json({ moveSuccess: true, task: data });
+            })
+            .catch((err) => {
+              throw err;
+            });
         });
-      }
+      } else res.send("The new location must be different from the old one");
     })
     .catch((err) => {
       throw err;
     });
-  return;
 };
 
-const moveVTBeforeOrAfter = (date, email, vtOld, vtNew) => {
-  getTaskByDateAndEmailSkipLimitVT(date, email, vtOld, vtNew).then((data) => {
-    const index = vtOld > vtNew ? 1 : -1;
+const moveVTBeforeOrAfter = (task, vtNew) => {
+  return getTaskByDateAndEmailSkipLimitVT(task, vtNew).then((data) => {
+    const index = task.vt > vtNew ? 1 : -1;
     data.forEach((element) => {
       moveTask(element._id, element.vt + index).catch((err) => {
         throw err;

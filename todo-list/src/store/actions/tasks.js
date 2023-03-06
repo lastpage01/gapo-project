@@ -1,6 +1,8 @@
 import {
   CREATE_TASK,
   DELETE_TASK,
+  MOVE_SUCCESS_DOWN,
+  MOVE_SUCCESS_UP,
   MOVE_TASK,
   RETRIEVE_TASK,
   TASK,
@@ -42,9 +44,21 @@ export const updateTaskAction = (id, title, status) => {
   };
 };
 
-export const moveTaskAction = (id, vtNew, email, date) => {
+export const moveTaskAction = (id, vtOld, vtNew) => {
   return {
     type: MOVE_TASK,
-    payload: { id, vtNew, email, date },
+    payload: { id, vtOld, vtNew },
+  };
+};
+export const moveTaskSuccessUp = (vtOld, vtNew) => {
+  return {
+    type: MOVE_SUCCESS_UP,
+    payload: { vtOld, vtNew },
+  };
+};
+export const moveTaskSuccessDown = (vtOld, vtNew) => {
+  return {
+    type: MOVE_SUCCESS_DOWN,
+    payload: { vtOld, vtNew },
   };
 };

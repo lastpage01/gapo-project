@@ -1,6 +1,6 @@
 .wrapper-header {
   box-sizing: border-box;
-  /* position: fixed; */
+  /* position: sticky; */
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -43,7 +43,6 @@
   cursor: pointer;
 }
 .wrapper-header-right > .user {
-  /* display: none; */
   width: 137px;
   height: 92px;
   position: absolute;

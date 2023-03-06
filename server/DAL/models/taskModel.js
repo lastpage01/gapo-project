@@ -22,7 +22,8 @@ export const getTaskByDateAndEmail = (date, email) => {
   return model.find({ date: date, email: email }).sort({ vt: 1 }).exec();
 };
 /////////////////////////////
-export const getTaskByDateAndEmailSkipLimitVT = (date, email, vt, vtNew) => {
+export const getTaskByDateAndEmailSkipLimitVT = (task, vtNew) => {
+  const { date, email, vt } = task;
   const { skip, limit } = firstAndLastArrMove(vt, vtNew);
   return model
     .find({ date: date, email: email })

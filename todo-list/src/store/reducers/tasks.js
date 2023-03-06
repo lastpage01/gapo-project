@@ -1,7 +1,8 @@
 import {
   CREATE_TASK,
   DELETE_TASK,
-  MOVE_TASK,
+  MOVE_SUCCESS_DOWN,
+  MOVE_SUCCESS_UP,
   RETRIEVE_TASK,
   UPDATE_TASK,
 } from "../actions/types";
@@ -16,8 +17,7 @@ function taskReducer(state = initialState, action) {
     case CREATE_TASK:
       return [...state, payload];
     case DELETE_TASK:
-      state = state.filter((task) => task._id !== payload);
-      return state;
+      return state.filter((task) => task._id !== payload);
     case UPDATE_TASK:
       return state.map((task) => {
         if (task._id === payload.id) {
@@ -26,10 +26,56 @@ function taskReducer(state = initialState, action) {
             title: payload.title,
             status: payload.status,
           };
-        } else return task;
+        }
+        return task;
       });
-    case MOVE_TASK:
-      return [...state];
+    case MOVE_SUCCESS_UP:
+      return state
+        .map((t) => {
+          if (
+            t.vt >= parseInt(payload.vtNew, 10) &&
+            t.vt < parseInt(payload.vtOld, 10)
+          ) {
+            return {
+              ...t,
+              vt: t.vt + 1,
+            };
+          }
+          if (t.vt === parseInt(payload.vtOld, 10)) {
+            return {
+              ...t,
+              vt: parseInt(payload.vtNew, 10),
+            };
+          }
+          return t;
+        })
+        .sort((a, b) => {
+          return a.vt > b.vt ? 1 : -1;
+        });
+    case MOVE_SUCCESS_DOWN:
+      return state
+        .map((t) => {
+          if (
+            t.vt <= parseInt(payload.vtNew, 10) &&
+            t.vt > parseInt(payload.vtOld, 10)
+          ) {
+            return {
+              ...t,
+              vt: t.vt - 1,
+            };
+          }
+          if (t.vt === parseInt(payload.vtOld, 10)) {
+            return {
+              ...t,
+              vt: parseInt(payload.vtNew, 10),
+            };
+          }
+          return t;
+        })
+        .sort((a, b) => {
+          return a.vt > b.vt ? 1 : -1;
+        });
+
     default:
       return state;
   }

@@ -25,16 +25,18 @@ const Home = (props) => {
     setShowMessage("none");
   };
   return (
-    <div className="home-container">
-      <div className="wrapper-time">
-        <Calendar setFullDate={setFullDate} />
-      </div>
-      <div className="wrapper-task">
-        <Task
-          fullDate={fullDate}
-          setShowMessage={setShowMessage}
-          setIdRemove={setIdRemove}
-        />
+    <>
+      <div className="home-container">
+        <div className="wrapper-time">
+          <Calendar setFullDate={setFullDate} />
+        </div>
+        <div className="wrapper-task">
+          <Task
+            fullDate={fullDate}
+            setShowMessage={setShowMessage}
+            setIdRemove={setIdRemove}
+          />
+        </div>
       </div>
       <div className="wrapper-message-box" style={{ display: showMessage }}>
         <div className="message-box">
@@ -50,7 +52,7 @@ const Home = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

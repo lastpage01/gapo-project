@@ -1,5 +1,5 @@
 import { InputField } from "@gapo_ui/components";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "../../helpers/validator";
 import { taskAction } from "../../store/actions/tasks";
@@ -43,7 +43,7 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
     setIsErr(!!isErrInput);
     return !!isErrInput;
   };
-
+  // console.log('running');
   return (
     <div className="wrapper-list-item">
       {tasks &&
@@ -51,12 +51,9 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
           return (
             <TaskItem
               key={task.id}
-              title={task.title}
-              id={task._id}
               setShowMessage={setShowMessage}
               setIdRemove={setIdRemove}
-              vt={task.vt}
-              status={task.status}
+              task = {task}
             />
           );
         })}
@@ -77,4 +74,4 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
   );
 };
 
-export default memo(Task);
+export default Task;

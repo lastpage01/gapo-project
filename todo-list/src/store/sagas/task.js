@@ -6,7 +6,12 @@ import {
   updateTaskById,
 } from "../../services/tasks.service";
 import { call, put } from "redux-saga/effects";
-import { createTaskAction, retrieveTaskAction } from "../actions/tasks";
+import {
+  createTaskAction,
+  moveTaskSuccessDown,
+  moveTaskSuccessUp,
+  retrieveTaskAction,
+} from "../actions/tasks";
 
 export function* task(action) {
   const { email, date, title } = action.payload;
@@ -42,9 +47,13 @@ export function* updateTask(action) {
 }
 
 export function* moveTask(action) {
-  const { id, vtNew } = action.payload;
+  const { id, vtOld, vtNew } = action.payload;
   try {
-    yield call(moveTaskByIdAndVtNew, id, vtNew);
+    const res = yield call(moveTaskByIdAndVtNew, id, vtNew);
+    if (res.data.moveSuccess === true) {
+      if (vtOld > vtNew) yield put(moveTaskSuccessUp(vtOld, vtNew));
+      else yield put(moveTaskSuccessDown(vtOld,vtNew))
+    }
   } catch (e) {
     console.log(e);
   }
