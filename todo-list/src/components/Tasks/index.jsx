@@ -2,10 +2,19 @@ import { InputField } from "@gapo_ui/components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "../../helpers/validator";
-import { taskAction } from "../../store/actions/tasks";
+import { moveTaskAction, taskAction } from "../../store/actions/tasks";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import "./style.css";
 import TaskItem from "./TaskItem";
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  border: isDragging ? "3px solid rgb(189, 203, 210)" : "",
+  background: isDragging ? "rgb(198, 198, 198)" : "",
+
+  ...draggableStyle,
+});
+
 const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
   const [newTask, setNewTask] = useState("");
   const [helper, setHelper] = useState("");
@@ -43,20 +52,56 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
     setIsErr(!!isErrInput);
     return !!isErrInput;
   };
-  // console.log('running');
+  const handleDropEnd = (result) => {
+    if (!result.destination) return;
+    const id = result.draggableId;
+    const vtOld = result.source.index;
+    const vtNew = result.destination.index;
+    if (!!id && !!vtOld && !!vtNew) dispatch(moveTaskAction(id, vtOld, vtNew));
+  };
   return (
     <div className="wrapper-list-item">
-      {tasks &&
-        tasks.map((task) => {
-          return (
-            <TaskItem
-              key={task.id}
-              setShowMessage={setShowMessage}
-              setIdRemove={setIdRemove}
-              task = {task}
-            />
-          );
-        })}
+      <DragDropContext onDragEnd={handleDropEnd}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {tasks &&
+                tasks.map((task) => {
+                  return (
+                    <Draggable
+                      key={task._id}
+                      draggableId={task._id}
+                      index={task.vt}
+                    >
+                      {(provided, snapshot) => {
+                        return (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            <TaskItem
+                              key={task.id}
+                              setShowMessage={setShowMessage}
+                              setIdRemove={setIdRemove}
+                              task={task}
+                              showIcon={snapshot.isDragging ? "block" : "none"}
+                            />
+                          </div>
+                        );
+                      }}
+                    </Draggable>
+                  );
+                })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div className="add-task">
         <InputField
           placeholder="Add task..."

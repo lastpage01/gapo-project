@@ -6,10 +6,10 @@ import { IconIc24FillTrash } from "@gapo_ui/icon";
 
 import "./style.css";
 import { useDispatch } from "react-redux";
-import { moveTaskAction, updateTaskAction } from "../../store/actions/tasks";
+import { updateTaskAction } from "../../store/actions/tasks";
 
-const TaskItem = ({ task, setShowMessage, setIdRemove }) => {
-  const { title, status, vt } = task;
+const TaskItem = ({ task, setShowMessage, setIdRemove, showIcon }) => {
+  const { title, status } = task;
   const id = task._id;
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [updateTask, setUpdateTask] = useState(title);
@@ -41,37 +41,18 @@ const TaskItem = ({ task, setShowMessage, setIdRemove }) => {
     setShowFormUpdate(false);
     e.target.value = title;
   };
-
-  const onDragStart = (e) => {
-    e.dataTransfer.setData("idTaskStart", e.target.id);
-    e.dataTransfer.setData("vt", vt);
-  };
-  const handleDrop = (e) => {
-    const idTaskStart = e.dataTransfer.getData("idTaskStart");
-    const vtOld = e.dataTransfer.getData("vt");
-    const vtNew = e.target.getAttribute("data-vt");
-    if (!!idTaskStart && !!vtOld && !!vtNew)
-      dispatch(moveTaskAction(idTaskStart, vtOld, vtNew));
-  };
-
   const handleUpdateStatusTask = () => {
     setUpdateStatus(!status);
     dispatch(updateTaskAction(id, title, !status));
   };
   return (
-    <div data-vt={vt} className="wrapper-task-item" draggable={true}>
-      <div className="task-item" data-vt={vt}>
-        <div
-          id={id}
-          data-vt={vt}
-          className="icon-vertical"
-          style={{ width: "35px" }}
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-          
-          onDragStart={onDragStart}
-        >
-          <IconIc24Fill6dotVertical className="vertical" />
+    <div className="wrapper-task-item">
+      <div className="task-item">
+        <div className="icon-vertical">
+          <IconIc24Fill6dotVertical
+            className="vertical"
+            UNSAFE_style={showIcon === "block" ? { display: showIcon } : {}}
+          />
         </div>
         <div className="icon-check-mark" onDoubleClick={handleUpdateStatusTask}>
           {updateStatus ? (
@@ -80,18 +61,13 @@ const TaskItem = ({ task, setShowMessage, setIdRemove }) => {
             <IconIc24Line15ChevronDownCircle color="contentTertiary" />
           )}
         </div>
-        <div data-vt={vt} className="content-task">
+        <div className="content-task">
           {!showFormUpdate ? (
-            <div
-              data-vt={vt}
-              className="div-title"
-              onDoubleClick={handleShowFormUpdate}
-            >
+            <div className="div-title" onDoubleClick={handleShowFormUpdate}>
               {title}
             </div>
           ) : (
             <input
-              data-vt={vt}
               type={"text"}
               className={"input-title"}
               defaultValue={title}
@@ -102,7 +78,12 @@ const TaskItem = ({ task, setShowMessage, setIdRemove }) => {
           )}
         </div>
 
-        <div id={id} className="icon-delete" onClick={handleDeleteTask}>
+        <div
+          id={id}
+          className="icon-delete"
+          onClick={handleDeleteTask}
+          style={showIcon === "block" ? { display: showIcon } : {}}
+        >
           <IconIc24FillTrash />
         </div>
       </div>

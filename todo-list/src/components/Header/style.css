@@ -1,12 +1,13 @@
 .wrapper-header {
   box-sizing: border-box;
-  /* position: sticky; */
+  position: fixed;
+  z-index: 1;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 70px;
-  background: #ffffff;
+  background-color: #ffffff;
   border: 0.05px solid #ffffff;
   box-shadow: 6px 6px 9px rgba(0, 0, 0, 0.25);
   color: rgba(75, 88, 124, 0.7);

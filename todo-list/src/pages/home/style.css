@@ -8,6 +8,7 @@
   font-style: normal;
   font-weight: 400;
   position: relative;
+  top: 60px;
 }
 .wrapper-time {
   display: flex;

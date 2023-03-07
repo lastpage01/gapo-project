@@ -28,6 +28,7 @@
 }
 
 .wrapper-task-item > .task-item > .icon-vertical {
+  width: 35px;
   margin: 0 20px;
 }
 .wrapper-task-item > .task-item > .icon-vertical > .vertical {
@@ -38,7 +39,7 @@
   margin-right: 15px;
   cursor: pointer;
 }
-.wrapper-task-item > .task-item > .content-task{
+.wrapper-task-item > .task-item > .content-task {
   width: 70%;
 }
 .wrapper-task-item > .task-item > .content-task > .div-title {
