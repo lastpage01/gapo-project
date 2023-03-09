@@ -7,13 +7,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import "./style.css";
 import TaskItem from "./TaskItem";
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  border: isDragging ? "3px solid rgb(189, 203, 210)" : "",
-  background: isDragging ? "rgb(198, 198, 198)" : "",
-
-  ...draggableStyle,
-});
+import { getItemStyle } from "../../helpers/defineStyle";
 
 const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
   const [newTask, setNewTask] = useState("");
@@ -64,7 +58,11 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
       <DragDropContext onDragEnd={handleDropEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ width: "100%" }}
+            >
               {tasks &&
                 tasks.map((task) => {
                   return (
@@ -74,6 +72,9 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
                       index={task.vt}
                     >
                       {(provided, snapshot) => {
+                        const displayIcon = snapshot.isDragging ? "block" : "";
+                        const displayLine = snapshot.isDragging ? "none" : "";
+                        const displayTitle = snapshot.isDragging ? "block" : "";
                         return (
                           <div
                             ref={provided.innerRef}
@@ -89,7 +90,7 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
                               setShowMessage={setShowMessage}
                               setIdRemove={setIdRemove}
                               task={task}
-                              showIcon={snapshot.isDragging ? "block" : "none"}
+                              style={{ displayIcon, displayLine, displayTitle }}
                             />
                           </div>
                         );
@@ -105,7 +106,7 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
       <div className="add-task">
         <InputField
           placeholder="Add task..."
-          variant="invisible"
+          variant={tasks.length > 0 ? "invisible" : "outlined"}
           fullWidth
           onChange={onChangeNewTask}
           onKeyDown={onKeyDownEnter}

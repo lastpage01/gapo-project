@@ -38,6 +38,6 @@ export const changePassword = (id, password)=>{
 
 export const generateAccessToken = (email) => {
     return jwt.sign({ email: email }, "bWluZHgud2ViNjE=", {
-      expiresIn: "1h",
+      expiresIn: "15h",
     });
   };

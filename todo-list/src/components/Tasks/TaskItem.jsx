@@ -1,14 +1,15 @@
 import React, { memo, useState } from "react";
 import { IconIc24Fill6dotVertical } from "@gapo_ui/icon";
 import { IconIc24FillCheckmarkCircle } from "@gapo_ui/icon";
-import { IconIc24Line15ChevronDownCircle } from "@gapo_ui/icon";
 import { IconIc24FillTrash } from "@gapo_ui/icon";
+import { IconIc24Line15CheckMarkCircle } from "@gapo_ui/icon";
 
 import "./style.css";
 import { useDispatch } from "react-redux";
 import { updateTaskAction } from "../../store/actions/tasks";
+import { InputField } from "@gapo_ui/components";
 
-const TaskItem = ({ task, setShowMessage, setIdRemove, showIcon }) => {
+const TaskItem = ({ task, setShowMessage, setIdRemove, style }) => {
   const { title, status } = task;
   const id = task._id;
   const [showFormUpdate, setShowFormUpdate] = useState(false);
@@ -51,29 +52,33 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, showIcon }) => {
         <div className="icon-vertical">
           <IconIc24Fill6dotVertical
             className="vertical"
-            UNSAFE_style={showIcon === "block" ? { display: showIcon } : {}}
+            UNSAFE_style={{ display: style.displayIcon }}
           />
         </div>
         <div className="icon-check-mark" onDoubleClick={handleUpdateStatusTask}>
           {updateStatus ? (
             <IconIc24FillCheckmarkCircle color="contentTertiary" />
           ) : (
-            <IconIc24Line15ChevronDownCircle color="contentTertiary" />
+            <IconIc24Line15CheckMarkCircle color="contentTertiary" />
           )}
         </div>
-        <div className="content-task">
+        <div className="content-task" onDoubleClick={handleShowFormUpdate}>
           {!showFormUpdate ? (
-            <div className="div-title" onDoubleClick={handleShowFormUpdate}>
+            <div
+              className="div-title"
+              style={{ display: style.displayTitle }}
+            >
               {title}
             </div>
           ) : (
-            <input
+            <InputField
               type={"text"}
-              className={"input-title"}
+              fullWidth
+              onBlur={handleLosesFocus}
               defaultValue={title}
               onKeyDown={handleUpdateTask}
               onChange={onChangeUpdateTask}
-              onBlur={handleLosesFocus}
+              placeholder="Write a task name"
             />
           )}
         </div>
@@ -82,12 +87,12 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, showIcon }) => {
           id={id}
           className="icon-delete"
           onClick={handleDeleteTask}
-          style={showIcon === "block" ? { display: showIcon } : {}}
+          style={{ display: style.displayIcon }}
         >
           <IconIc24FillTrash />
         </div>
       </div>
-      <div className="line" />
+      <div className="line" style={{ display: style.displayLine }} />
     </div>
   );
 };

@@ -19,7 +19,8 @@
 
 .wrapper-task {
   margin-top: 50px;
-  width: 50%;
+  width: 800px;
+  box-sizing: border-box;
 }
 .wrapper-message-box {
   background: rgba(196, 196, 196, 0.7);

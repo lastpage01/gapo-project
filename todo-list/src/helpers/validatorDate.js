@@ -58,3 +58,9 @@ export const validateDate = (day, date, month, year) => {
     year: y,
   };
 };
+
+export const convertValueDate = (date, month, year) => {
+  const d = date < 10 ? `0${Number(date)}` : date;
+  const m = month < 10 ? `0${Number(month)}` : month;
+  return `${year}-${m}-${d}`;
+};

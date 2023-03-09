@@ -6,12 +6,15 @@ import {
   updateTaskById,
 } from "../../services/tasks.service";
 import { call, put } from "redux-saga/effects";
+
 import {
   createTaskAction,
   moveTaskSuccessDown,
   moveTaskSuccessUp,
   retrieveTaskAction,
 } from "../actions/tasks";
+import { signOut } from "../../services/users.service";
+import { logOut } from "../actions/users";
 
 export function* task(action) {
   const { email, date, title } = action.payload;
@@ -24,7 +27,11 @@ export function* task(action) {
       yield put(retrieveTaskAction(res.data.tasks));
     }
   } catch (e) {
-    console.log(e);
+    if (e.response.status === 403) {
+      alert("Login session has expired");
+      yield call(signOut);
+      yield put(logOut());
+    }
   }
 }
 
@@ -33,7 +40,11 @@ export function* deleteTask(action) {
   try {
     yield call(deleteTaskById, id);
   } catch (e) {
-    console.log(e);
+    if (e.response.status === 403) {
+      alert("Login session has expired");
+      yield call(signOut);
+      yield put(logOut());
+    }
   }
 }
 
@@ -42,19 +53,28 @@ export function* updateTask(action) {
   try {
     yield call(updateTaskById, id, { title, status });
   } catch (e) {
-    console.log(e);
+    if (e.response.status === 403) {
+      alert("Login session has expired");
+      yield call(signOut);
+      yield put(logOut());
+    }
   }
 }
 
 export function* moveTask(action) {
   const { id, vtOld, vtNew } = action.payload;
   try {
-    const res = yield call(moveTaskByIdAndVtNew, id, vtNew);
-    if (res.data.moveSuccess === true) {
-      if (vtOld > vtNew) yield put(moveTaskSuccessUp(vtOld, vtNew));
-      else yield put(moveTaskSuccessDown(vtOld,vtNew))
-    }
+    if (vtOld > vtNew) yield put(moveTaskSuccessUp(vtOld, vtNew));
+    else yield put(moveTaskSuccessDown(vtOld, vtNew));
+    yield call(moveTaskByIdAndVtNew, id, vtNew);
   } catch (e) {
-    console.log(e);
+    if (e.response.status === 403) {
+      alert("Login session has expired");
+      yield call(signOut);
+      yield put(logOut());
+    }
+    else {
+      
+    }
   }
 }

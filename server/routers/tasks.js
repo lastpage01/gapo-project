@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticateToken } from "../common/authentication";
 import {
   addNewTask,
   deleteTask,
@@ -14,7 +15,7 @@ import {
 
 const taskRouter = express.Router();
 
-taskRouter.get("/", (req, res) => {
+taskRouter.get("/",authenticateToken, (req, res) => {
   getAllTask().then((data) => {
     res.json({ count: data.length, tasks: data });
   });

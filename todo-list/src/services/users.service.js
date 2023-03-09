@@ -9,11 +9,6 @@ export const callApiLogin = (email, password) => {
     .then((res) => {
       if (res.data.token) {
         localStorage.setItem("user", JSON.stringify(res.data));
-        axios({
-          headers: {
-            Authorization: `Bearer ${res.data.token}`,
-          },
-        });
       }
       return res.data;
     })
