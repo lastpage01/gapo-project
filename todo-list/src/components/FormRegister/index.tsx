@@ -1,69 +1,54 @@
 import { Button, InputField, PasswordField } from "@gapo_ui/components";
-import React, { useState } from "react";
+import React from "react";
 import {
-  checkEmailErr,
   checkErrValidateForm,
-  checkNameErr,
-  checkPassErr,
+  validateEmail,
+  validateFullName,
+  validatePassword,
 } from "../../helpers/validator";
+import { useInput } from "../../hooks/useInput";
 import { register } from "../../services/users.service";
 
 import "./style.css";
-const SignUp = ({ setAppearSignIn }) => {
-  const [emailValue, setEmailValue] = useState("");
-  const [helperTextEmail, setHelperTextEmail] = useState("");
-  const [isErrEmail, setIsErrEmail] = useState(false);
 
-  const [passValue, setPassValue] = useState("");
-  const [helperTextPass, setHelperTextPass] = useState("");
-  const [isErrPass, setIsErrPass] = useState(false);
+type TypeProps = {
+  setAppearSignIn: (val:boolean)=>void;
+};
 
-  const [nameValue, setNameValue] = useState("");
-  const [helperTextName, setHelperTextName] = useState("");
-  const [isErrName, setIsErrName] = useState(false);
-
-  const handleAppearLogin = () => {
-    setAppearSignIn(true);
-  };
+const SignUp = (props: TypeProps): JSX.Element => {
+  const emailState = useInput(validateEmail);
+  const nameState = useInput(validateFullName);
+  const passState = useInput(validatePassword);
 
   const onChangeEmail = (e) => {
-    setEmailValue(e.target.value);
+    emailState.setValue(e.target.value);
   };
   const onChangePassword = (e) => {
-    setPassValue(e.target.value);
+    passState.setValue(e.target.value);
   };
-
   const onChangeFullName = (e) => {
-    setNameValue(e.target.value);
+    nameState.setValue(e.target.value);
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     if (isErr() === false) {
-      const user = {
-        email: emailValue,
-        password: passValue,
-        fullName: nameValue,
-      };
-      register(user)
+      await register(emailState.Value, passState.Value, nameState.Value)
         .then((data) => {
           alert("Register success");
-          handleAppearLogin();
+          props.setAppearSignIn(true);
         })
         .catch((err) => {
-          setHelperTextEmail(err.response.data);
-          setIsErrEmail(true);
+          emailState.setHelperText(err.response.data);
+          emailState.setIsErr(true);
         });
     }
   };
-  const isErr = () => {
-    const errName = checkNameErr(nameValue, setHelperTextName, setIsErrName);
-    const errEmail = checkEmailErr(
-      emailValue,
-      setHelperTextEmail,
-      setIsErrEmail
+  const isErr = ():boolean => {
+    return checkErrValidateForm(
+      emailState.err(),
+      passState.err(),
+      nameState.err()
     );
-    const errPass = checkPassErr(passValue, setHelperTextPass, setIsErrPass);
-    return checkErrValidateForm(errName, errEmail, errPass);
   };
   return (
     <div className="wrapper-signUp">
@@ -76,9 +61,9 @@ const SignUp = ({ setAppearSignIn }) => {
             placeholder="Enter Full Name"
             className="fullName"
             fullWidth
-            helperText={helperTextName}
-            value={nameValue}
-            error={isErrName}
+            helperText={nameState.helperText}
+            value={nameState.Value}
+            error={nameState.isErr}
             onChange={onChangeFullName}
           />
         </div>
@@ -90,9 +75,9 @@ const SignUp = ({ setAppearSignIn }) => {
             className="email"
             fullWidth
             onChange={onChangeEmail}
-            value={emailValue}
-            helperText={helperTextEmail}
-            error={isErrEmail}
+            helperText={emailState.helperText}
+            value={emailState.Value}
+            error={emailState.isErr}
           />
         </div>
         <div className="wrapper-input">
@@ -103,9 +88,9 @@ const SignUp = ({ setAppearSignIn }) => {
             className="password"
             fullWidth
             onChange={onChangePassword}
-            helperText={helperTextPass}
-            error={isErrPass}
-            value={passValue}
+            helperText={passState.helperText}
+            value={passState.Value}
+            error={passState.isErr}
           />
         </div>
         <Button
@@ -114,13 +99,14 @@ const SignUp = ({ setAppearSignIn }) => {
           type="button"
           className="signUp"
           fullWidth
+          variant="cta"
           onPress={handleRegister}
         >
           Sign Up
         </Button>
         <div className="back-signIn">
           <p>Already have an account ?</p>
-          <p className="back" onClick={handleAppearLogin}>
+          <p className="back" onClick={() => props.setAppearSignIn(true)}>
             Sign In
           </p>
         </div>

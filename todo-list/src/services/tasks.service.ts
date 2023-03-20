@@ -1,6 +1,6 @@
 import axios from "axios";
 const setToken = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user")!);
   const token = !!user && !!user.token ? user.token : "";
   return {
     "Content-Type": "application/json",
@@ -8,7 +8,7 @@ const setToken = () => {
     Authorization: `Bearer ${token}`,
   };
 };
-export const retrieveTaskByEmailAndDate = (email, date) => {
+export const retrieveTaskByEmailAndDate = (email:string, date:string) => {
   return axios({
     method: "get",
     url: `http://localhost:3000/api/tasks/dateAndEmail?email=${email}&date=${date}`,
@@ -16,7 +16,7 @@ export const retrieveTaskByEmailAndDate = (email, date) => {
   });
 };
 
-export const createTaskByEmailAndDate = (email, date, title) => {
+export const createTaskByEmailAndDate = (email:string, date:string, title:string) => {
   return axios({
     method: "post",
     url: `http://localhost:3000/api/tasks`,
@@ -24,7 +24,7 @@ export const createTaskByEmailAndDate = (email, date, title) => {
     headers: setToken(),
   });
 };
-export const deleteTaskById = (id) => {
+export const deleteTaskById = (id:string) => {
   return axios({
     method: "delete",
     url: `http://localhost:3000/api/tasks/${id}`,
@@ -32,7 +32,7 @@ export const deleteTaskById = (id) => {
   });
 };
 
-export const updateTaskById = (id, task) => {
+export const updateTaskById = (id:string, task:{title:string,status?:boolean}) => {
   return axios({
     method: "put",
     url: `http://localhost:3000/api/tasks/${id}`,
@@ -41,7 +41,7 @@ export const updateTaskById = (id, task) => {
   });
 };
 
-export const moveTaskByIdAndVtNew = (id, vtNew) => {
+export const moveTaskByIdAndVtNew = (id:string, vtNew:number) => {
   return axios({
     method: "put",
     url: `http://localhost:3000/api/tasks/moveTask/${id}?vt=${vtNew}`,

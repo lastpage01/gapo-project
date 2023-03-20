@@ -1,4 +1,4 @@
-export const convertDay = (day) => {
+export const convertDayToString = (day: number): string => {
   switch (day) {
     case 1:
       return "Monday";
@@ -16,15 +16,27 @@ export const convertDay = (day) => {
       return "Sunday";
   }
 };
-const isLeapYear = (year) => {
-  if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) return true;
-  return false;
+const isLeapYear = (year: number): number => {
+  if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) return 1;
+  return 0;
 };
 
-export const validateDate = (day, date, month, year) => {
+type ValidateDate = {
+  day: number;
+  date: number;
+  month: number;
+  year: number;
+};
+
+export const validateDate = (
+  day: number,
+  date: number,
+  month: number,
+  year: number
+): ValidateDate | null => {
   let d, m, y;
   const t = day < 0 ? 6 : day > 6 ? 0 : day;
-  if (month > 12 || month < 1 || year < 0) return {};
+  if (month > 12 || month < 1 || year < 0) return null;
   const months = [
     31,
     28 + isLeapYear(year),
@@ -59,7 +71,11 @@ export const validateDate = (day, date, month, year) => {
   };
 };
 
-export const convertValueDate = (date, month, year) => {
+export const convertValueDateToString = (
+  date: number,
+  month: number,
+  year: number
+): string => {
   const d = date < 10 ? `0${Number(date)}` : date;
   const m = month < 10 ? `0${Number(month)}` : month;
   return `${year}-${m}-${d}`;

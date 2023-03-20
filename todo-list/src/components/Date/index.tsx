@@ -4,23 +4,26 @@ import { IconIc24FillArrowheadRight } from "@gapo_ui/icon";
 
 import "./style.css";
 import {
-  convertDay,
-  convertValueDate,
+  convertDayToString,
+  convertValueDateToString,
   validateDate,
 } from "../../helpers/validatorDate";
 import { InputField } from "@gapo_ui/components";
 
-const Calendar = ({ setFullDate }) => {
+interface Props{
+  setFullDate:(val:{ date: number; month: number; year: number })=>void
+}
+const Calendar = ({ setFullDate }:Props):JSX.Element => {
   const [day, setDay] = useState(new Date().getDay());
   const [date, setDate] = useState(new Date().getDate());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [valuePicker, setValuePicker] = useState(
-    convertValueDate(date, month, year)
+    convertValueDateToString(date, month, year)
   );
   useEffect(() => {
     setFullDate({ date, month, year });
-    setValuePicker(convertValueDate(date, month, year));
+    setValuePicker(convertValueDateToString(date, month, year));
   }, [date, month, setFullDate, year]);
 
   const handleDayBefore = () => {
@@ -35,8 +38,8 @@ const Calendar = ({ setFullDate }) => {
 
   const onChangeDatePicker = (e) => {
     setValuePicker(e.target.value);
-    const valueInput = e.target.value.split("-");
     const dayPicker = new Date(e.target.value).getDay();
+    const valueInput = e.target.value.split("-");
     setCalendar({
       day: dayPicker,
       date: Number(valueInput[2]),
@@ -62,15 +65,14 @@ const Calendar = ({ setFullDate }) => {
           {new Date(`${year}-${month}-${date}`).toDateString() ===
           new Date().toDateString()
             ? "Today"
-            : convertDay(day)}
+            : convertDayToString(day)}
         </div>
         <div className="icon-right" onClick={handleDayAfter}>
           <IconIc24FillArrowheadRight size={32} />
         </div>
       </div>
       <div className="bottom-date">
-        {/* {convertDay(day)}, {date}/{month}/{year} */}
-        {convertDay(day)},{" "}
+        {convertDayToString(day)},{" "}
         <InputField
           variant="invisible"
           type="date"

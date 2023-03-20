@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const callApiLogin = (email, password) => {
+export const callApiLogin = (email: string, password: string) => {
   return axios({
     method: "post",
     url: "http://localhost:3000/api/users/signIn",
@@ -20,15 +20,15 @@ export const signOut = () => {
   localStorage.removeItem("user");
 };
 
-export const register = (user) => {
+export const register = (email: string, password: string, fullName: string) => {
   return axios({
     method: "post",
     url: "http://localhost:3000/api/users/signUp",
-    data: user,
+    data: { email, password, fullName },
   });
 };
 
-export const changeFullName = (email, newFullName) => {
+export const changeFullName = (email: string, newFullName: string) => {
   return axios({
     method: "put",
     url: "http://localhost:3000/api/users/changeFullName",
@@ -36,7 +36,11 @@ export const changeFullName = (email, newFullName) => {
   });
 };
 
-export const changePassword = (email, currentPassword, newPassword) => {
+export const changePassword = (
+  email: string,
+  currentPassword: string,
+  newPassword: string
+) => {
   return axios({
     method: "put",
     url: "http://localhost:3000/api/users/changePassword",

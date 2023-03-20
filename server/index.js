@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRouter);
-app.use("/api/tasks",authenticateToken, taskRouter);
+app.use("/api/tasks", taskRouter);
 
 app.listen(post, (res, req) => {
   console.log("database is connected !");

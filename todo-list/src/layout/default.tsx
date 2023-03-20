@@ -2,8 +2,9 @@ import React from "react";
 import { IconIc24Line15CheckMarkCircle } from "@gapo_ui/icon";
 import { IconIc24FillChevronLeft } from "@gapo_ui/icon";
 import Header from "../components/Header";
-
-const titleValueAndIcon = (page) => {
+const titleValueAndIcon = (
+  page: string
+): { title: string; icon: JSX.Element | null } => {
   switch (page) {
     case "home":
       return {
@@ -18,12 +19,15 @@ const titleValueAndIcon = (page) => {
     default:
       return {
         title: "",
-        icon: "",
+        icon: null,
       };
   }
 };
-
-const DefaultLayout = ({ child, page }) => {
+type Layout = {
+  child: JSX.Element;
+  page: string;
+};
+const DefaultLayout = ({ child, page }: Layout): JSX.Element => {
   const { title, icon } = titleValueAndIcon(page);
   return (
     <>

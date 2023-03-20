@@ -1,59 +1,53 @@
 import { Button, InputField, PasswordField } from "@gapo_ui/components";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { FaFacebookF } from "react-icons/fa";
-// import { AiOutlineTwitter } from "react-icons/ai";
-// import { IoLogoGoogleplus } from "react-icons/io";
 
 import "./style.css";
 import {
-  checkEmailErr,
   checkErrValidateForm,
-  checkPassErr,
+  validateEmail,
+  validatePassword,
 } from "../../helpers/validator";
 
-import { login } from "../../store/actions/users";
-import { clearMessage } from "../../store/actions/messages";
+import { login } from "../../store/slices/userSlice";
+import { clearMessage } from "../../store/slices/messageSlice";
+import { RootState } from "../../store";
+import { useInput } from "../../hooks/useInput";
 
-const SignIn = ({ setAppearSignIn }) => {
-  const [emailValue, setEmailValue] = useState("");
-  const [helperTextEmail, setHelperTextEmail] = useState("");
-  const [isErrEmail, setIsErrEmail] = useState(false);
+type Props = {
+  setAppearSignIn: (val:boolean)=>void;
+};
 
-  const [passValue, setPassValue] = useState("");
-  const [helperTextPass, setHelperTextPass] = useState("");
-  const [isErrPass, setIsErrPass] = useState(false);
+const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
+  const emailState = useInput(validateEmail);
+  const passwordState = useInput(validatePassword);
 
   const dispatch = useDispatch();
-  const { message } = useSelector((state) => state);
+  const { message } = useSelector((state: RootState) => state.message);
 
   const handleAppearRegister = () => {
     setAppearSignIn(false);
   };
-  
+
   const onChangeEmail = (e) => {
-    setEmailValue(e.target.value);
+    emailState.setValue(e.target.value);
   };
   const onChangePassword = (e) => {
-    setPassValue(e.target.value);
+    passwordState.setValue(e.target.value);
   };
 
   const handleLogin = (e) => {
     if (isErr() === false) {
-      dispatch(login(emailValue, passValue));
+      dispatch(
+        login({ email: emailState.Value, password: passwordState.Value })
+      );
     } else {
       dispatch(clearMessage());
     }
   };
 
   const isErr = () => {
-    const errEmail = checkEmailErr(
-      emailValue,
-      setHelperTextEmail,
-      setIsErrEmail
-    );
-    const errPass = checkPassErr(passValue, setHelperTextPass, setIsErrPass);
-    return checkErrValidateForm(errEmail, errPass);
+    return checkErrValidateForm(emailState.err(), passwordState.err());
   };
   return (
     <div className="wrapper-signIn">
@@ -67,9 +61,9 @@ const SignIn = ({ setAppearSignIn }) => {
             className="email"
             fullWidth
             onChange={onChangeEmail}
-            value={emailValue}
-            helperText={helperTextEmail}
-            error={isErrEmail}
+            value={emailState.Value}
+            helperText={emailState.helperText}
+            error={emailState.isErr}
           />
         </div>
         <div className="wrapper-input">
@@ -80,9 +74,9 @@ const SignIn = ({ setAppearSignIn }) => {
             className="password"
             fullWidth
             onChange={onChangePassword}
-            helperText={helperTextPass}
-            error={isErrPass}
-            value={passValue}
+            helperText={passwordState.helperText}
+            error={passwordState.isErr}
+            value={passwordState.Value}
           />
         </div>
         <div style={{ color: "red", marginBottom: "10px" }}>{message}</div>
@@ -93,6 +87,7 @@ const SignIn = ({ setAppearSignIn }) => {
           type="button"
           className="login"
           fullWidth
+          variant="cta"
         >
           Login
         </Button>
@@ -101,6 +96,7 @@ const SignIn = ({ setAppearSignIn }) => {
           size="medium"
           type="button"
           className="register"
+          variant="cta"
           onPress={handleAppearRegister}
         >
           Register

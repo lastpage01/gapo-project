@@ -44,6 +44,7 @@
   cursor: pointer;
 }
 .wrapper-header-right > .user {
+  display: grid;
   width: 137px;
   height: 92px;
   position: absolute;

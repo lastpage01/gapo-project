@@ -35,7 +35,7 @@ userRouter.post("/signIn", (req, res) => {
     .then((data) => {
       if (data.length > 0) {
         let token = generateAccessToken(email);
-        res.json({ existed: true, token: token, fullName: data[0].fullName,email:email });
+        res.json({ existed: true, token: token, username: data[0].fullName,email:email });
       } else res.send({ message: "Login failed!" });
     })
     .catch((err) => {

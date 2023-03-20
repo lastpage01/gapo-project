@@ -1,27 +1,36 @@
 import { InputField } from "@gapo_ui/components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isEmpty } from "../../helpers/validator";
-import { moveTaskAction, taskAction } from "../../store/actions/tasks";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import "./style.css";
 import TaskItem from "./TaskItem";
 import { getItemStyle } from "../../helpers/defineStyle";
-
-const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
+import { isEmpty } from "../../helpers/validator";
+import { moveTaskAction, taskAction } from "../../store/slices/taskSlice";
+import { RootState } from "../../store";
+interface Props {
+  fullDate: { date: number; month: number; year: number };
+  setShowMessage: (value: boolean) => void;
+  setIdRemove: (value: null | string) => void;
+}
+const Task = ({
+  fullDate,
+  setShowMessage,
+  setIdRemove,
+}: Props): JSX.Element => {
   const [newTask, setNewTask] = useState("");
   const [helper, setHelper] = useState("");
   const [isErr, setIsErr] = useState(false);
 
   const dispatch = useDispatch();
 
-  const { email } = useSelector((state) => state.users);
-  const date = `${fullDate.year}/${fullDate.month}/${fullDate.date}`;
+  const { email } = useSelector((state: RootState) => state.users);
+  const tasks = useSelector((state: RootState) => state.tasks.taskList);
 
-  const { tasks } = useSelector((state) => state);
+  const date = `${fullDate.year}/${fullDate.month}/${fullDate.date}`;
   useEffect(() => {
-    dispatch(taskAction(email, date));
+    dispatch(taskAction({ email: email!, date }));
   }, [date, dispatch, email]);
 
   const onChangeNewTask = (e) => {
@@ -30,17 +39,17 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
   const onKeyDownEnter = (e) => {
     if (e.keyCode === 13) {
       if (checkEmptyInput() === false) {
-        dispatch(taskAction(email, date, newTask));
+        dispatch(taskAction({ email: email!, date, title: newTask }));
         setNewTask("");
       }
     }
   };
-  const handleLosesFocus = (e) => {
+  const handleLosesFocus = (): void => {
     setIsErr(false);
-    if (e.target.value.trim()) setNewTask("");
+    setNewTask("");
     setHelper("");
   };
-  const checkEmptyInput = () => {
+  const checkEmptyInput = (): boolean => {
     const isErrInput = isEmpty(newTask);
     setHelper(isErrInput);
     setIsErr(!!isErrInput);
@@ -51,7 +60,8 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
     const id = result.draggableId;
     const vtOld = result.source.index;
     const vtNew = result.destination.index;
-    if (!!id && !!vtOld && !!vtNew) dispatch(moveTaskAction(id, vtOld, vtNew));
+    if (!!id && !!vtOld && !!vtNew)
+      dispatch(moveTaskAction({ id, vtOld, vtNew }));
   };
   return (
     <div className="wrapper-list-item">
@@ -72,9 +82,6 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
                       index={task.vt}
                     >
                       {(provided, snapshot) => {
-                        const displayIcon = snapshot.isDragging ? "block" : "";
-                        const displayLine = snapshot.isDragging ? "none" : "";
-                        const displayTitle = snapshot.isDragging ? "block" : "";
                         return (
                           <div
                             ref={provided.innerRef}
@@ -90,7 +97,10 @@ const Task = ({ fullDate, setShowMessage, setIdRemove }) => {
                               setShowMessage={setShowMessage}
                               setIdRemove={setIdRemove}
                               task={task}
-                              style={{ displayIcon, displayLine, displayTitle }}
+                              style={{
+                                displayShowDrag: snapshot.isDragging ? "block" : "",
+                                displayHideDrag: snapshot.isDragging ? "none" : "",
+                              }}
                             />
                           </div>
                         );
