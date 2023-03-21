@@ -1,59 +1,55 @@
 import { InputField } from "@gapo_ui/components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import "./style.css";
 import TaskItem from "./TaskItem";
-import { getItemStyle } from "../../helpers/defineStyle";
 import { isEmpty } from "../../helpers/validator";
 import { moveTaskAction, taskAction } from "../../store/slices/taskSlice";
 import { RootState } from "../../store";
+import { useInput } from "../../hooks/useInput";
 interface Props {
   fullDate: { date: number; month: number; year: number };
   setShowMessage: (value: boolean) => void;
   setIdRemove: (value: null | string) => void;
 }
+const getItemStyle = (isDragging: boolean, draggableStyle) => ({
+  border: isDragging ? "1px solid rgb(189, 203, 210)" : "",
+  background: isDragging ? "rgb(200, 200, 198)" : "",
+  ...draggableStyle,
+});
+
 const Task = ({
   fullDate,
   setShowMessage,
   setIdRemove,
 }: Props): JSX.Element => {
-  const [newTask, setNewTask] = useState("");
-  const [helper, setHelper] = useState("");
-  const [isErr, setIsErr] = useState(false);
-
   const dispatch = useDispatch();
+  const taskState = useInput("", isEmpty);
 
   const { email } = useSelector((state: RootState) => state.users);
   const tasks = useSelector((state: RootState) => state.tasks.taskList);
-
   const date = `${fullDate.year}/${fullDate.month}/${fullDate.date}`;
+
   useEffect(() => {
     dispatch(taskAction({ email: email!, date }));
-  }, [date, dispatch, email]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date, dispatch]);
+  
   const onChangeNewTask = (e) => {
-    setNewTask(e.target.value);
+    taskState.setValue(e.target.value);
   };
   const onKeyDownEnter = (e) => {
     if (e.keyCode === 13) {
-      if (checkEmptyInput() === false) {
-        dispatch(taskAction({ email: email!, date, title: newTask }));
-        setNewTask("");
+      if (taskState.err() === false) {
+        dispatch(taskAction({ email: email!, date, title: taskState.Value }));
+        taskState.reset();
       }
     }
   };
   const handleLosesFocus = (): void => {
-    setIsErr(false);
-    setNewTask("");
-    setHelper("");
-  };
-  const checkEmptyInput = (): boolean => {
-    const isErrInput = isEmpty(newTask);
-    setHelper(isErrInput);
-    setIsErr(!!isErrInput);
-    return !!isErrInput;
+    taskState.reset();
   };
   const handleDropEnd = (result) => {
     if (!result.destination) return;
@@ -97,9 +93,9 @@ const Task = ({
                               setShowMessage={setShowMessage}
                               setIdRemove={setIdRemove}
                               task={task}
-                              style={{
-                                displayShowDrag: snapshot.isDragging ? "block" : "",
-                                displayHideDrag: snapshot.isDragging ? "none" : "",
+                              styleDrag={{
+                                displayShowDrag: snapshot.isDragging && "block",
+                                displayHideDrag: snapshot.isDragging && "none",
                               }}
                             />
                           </div>
@@ -120,9 +116,9 @@ const Task = ({
           fullWidth
           onChange={onChangeNewTask}
           onKeyDown={onKeyDownEnter}
-          value={newTask}
-          helperText={helper}
-          error={isErr}
+          value={taskState.Value}
+          helperText={taskState.helperText}
+          error={taskState.isErr}
           onBlur={handleLosesFocus}
         />
       </div>

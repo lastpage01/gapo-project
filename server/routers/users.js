@@ -1,4 +1,5 @@
 import express from "express";
+import { authenticateToken } from "../common/authentication";
 import {
   changeFullName,
   changePassword,
@@ -17,12 +18,11 @@ userRouter.get("/", (req, res) => {
   });
 });
 
-userRouter.get("/getMe", (req, res) => {
-  const { email } = req.query;
-
+userRouter.get("/getMe",authenticateToken, (req, res) => {
+  const { email } = req.user;
   getMe(email)
     .then((data) => {
-      res.json(data);
+      res.json(data[0]);
     })
     .catch((err) => {
       throw err;
@@ -35,7 +35,7 @@ userRouter.post("/signIn", (req, res) => {
     .then((data) => {
       if (data.length > 0) {
         let token = generateAccessToken(email);
-        res.json({ existed: true, token: token, username: data[0].fullName,email:email });
+        res.json({ existed: true, token: token});
       } else res.send({ message: "Login failed!" });
     })
     .catch((err) => {

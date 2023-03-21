@@ -14,7 +14,7 @@ import {
   retrieveTaskAction,
 } from "../slices/taskSlice";
 import { TaskAction, TaskMove, TaskUpdate } from "../interface/task";
-// import { logout } from "../slices/userSlice";
+import { logout } from "../slices/userSlice";
 
 export function* task(action: PayloadAction<TaskAction>) {
   const { email, date, title } = action.payload;
@@ -27,14 +27,12 @@ export function* task(action: PayloadAction<TaskAction>) {
       yield put(retrieveTaskAction(res.data.tasks));
     }
   } catch (e) {
-    console.log(e);
-
-    // if (e.response.status === 403) {
-    //   alert("Login session has expired");
-    //   yield put(logout());
-    // } else {
-    //   console.log(e);
-    // }
+    if (e.response.status === 403 || e.response.status === 401) {
+      yield alert("Login session has expired");
+      yield put(logout());
+    } else {
+      console.log(e);
+    }
   }
 }
 
@@ -43,13 +41,12 @@ export function* deleteTask(action: PayloadAction<string>) {
   try {
     yield call(deleteTaskById, id);
   } catch (e) {
-    console.log(e);
-
-    // if (e.response.status === 403) {
-    //   alert("Login session has expired");
-    //   yield call(signOut);
-    //   yield put(logout());
-    // }
+    if (e.response.status === 403 || e.response.status === 401) {
+      alert("Login session has expired");
+      yield put(logout());
+    } else {
+      console.log(e);
+    }
   }
 }
 
@@ -59,13 +56,12 @@ export function* updateTask(action: PayloadAction<TaskUpdate>) {
   try {
     yield call(updateTaskById, id, { title, status });
   } catch (e) {
-    console.log(e);
-
-    // if (e.response.status === 403) {
-    //   alert("Login session has expired");
-    //   yield call(signOut);
-    //   yield put(logout());
-    // }
+    if (e.response.status === 403 || e.response.status === 401) {
+      alert("Login session has expired");
+      yield put(logout());
+    } else {
+      console.log(e);
+    }
   }
 }
 
@@ -76,13 +72,11 @@ export function* moveTask(action: PayloadAction<TaskMove>) {
     else yield put(moveTaskSuccessDown({ vtOld, vtNew }));
     yield call(moveTaskByIdAndVtNew, id, vtNew);
   } catch (e) {
-    console.log(e);
-
-    // if (e.response.status === 403) {
-    //   alert("Login session has expired");
-    //   yield call(signOut);
-    //   yield put(logout());
-    // } else {
-    // }
+    if (e.response.status === 403 || e.response.status === 401) {
+      alert("Login session has expired");
+      yield put(logout());
+    } else {
+      console.log(e);
+    }
   }
 }

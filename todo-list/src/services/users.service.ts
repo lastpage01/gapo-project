@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setToken } from "./tasks.service";
 
 export const callApiLogin = (email: string, password: string) => {
   return axios({
@@ -8,7 +9,7 @@ export const callApiLogin = (email: string, password: string) => {
   })
     .then((res) => {
       if (res.data.token) {
-        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("token", JSON.stringify(res.data.token));
       }
       return res.data;
     })
@@ -17,7 +18,7 @@ export const callApiLogin = (email: string, password: string) => {
     });
 };
 export const signOut = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("token");
 };
 
 export const register = (email: string, password: string, fullName: string) => {
@@ -45,5 +46,13 @@ export const changePassword = (
     method: "put",
     url: "http://localhost:3000/api/users/changePassword",
     data: { email, currentPassword, newPassword },
+  });
+};
+
+export const getMe = () => {
+  return axios({
+    method: "get",
+    url: "http://localhost:3000/api/users/getMe",
+    headers:setToken()
   });
 };

@@ -8,7 +8,7 @@ export const getAllUser = () => {
   return model.find().exec();
 };
 export const getMe = (email) => {
-  return model.find({ email: email }).exec();
+  return model.find({ email: email }).limit(1).exec();
 };
 
 export const signIn = (email, pass) => {
@@ -38,6 +38,6 @@ export const changePassword = (id, password)=>{
 
 export const generateAccessToken = (email) => {
     return jwt.sign({ email: email }, "bWluZHgud2ViNjE=", {
-      expiresIn: "3h",
+      expiresIn: "15h ",
     });
   };

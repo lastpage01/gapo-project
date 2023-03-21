@@ -20,13 +20,13 @@ interface Props {
   };
   setShowMessage: (value: boolean) => void;
   setIdRemove: (value: string | null) => void;
-  style: {
-    displayShowDrag: "block" | "";
-    displayHideDrag: "none" | "";
+  styleDrag: {
+    displayShowDrag: "block";
+    displayHideDrag: "none";
   };
 }
 
-const TaskItem = ({ task, setShowMessage, setIdRemove, style }: Props) => {
+const TaskItem = ({ task, setShowMessage, setIdRemove, styleDrag }: Props) => {
   const { title, status } = task;
   const id = task._id;
 
@@ -70,7 +70,7 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, style }: Props) => {
         <div className="icon-vertical">
           <IconIc24Fill6dotVertical
             className="vertical"
-            UNSAFE_style={{ display: style.displayShowDrag }}
+            UNSAFE_style={{ display: styleDrag.displayShowDrag }}
           />
         </div>
         <div className="icon-check-mark" onDoubleClick={handleUpdateStatusTask}>
@@ -84,7 +84,7 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, style }: Props) => {
           {!showFormUpdate ? (
             <div
               className="div-title"
-              style={{ display: style.displayShowDrag }}
+              style={{ display: styleDrag.displayShowDrag }}
             >
               {title}
             </div>
@@ -105,12 +105,12 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, style }: Props) => {
           id={id}
           className="icon-delete"
           onClick={handleDeleteTask}
-          style={{ display: style.displayShowDrag }}
+          style={{ display: styleDrag.displayShowDrag }}
         >
           <IconIc24FillTrash />
         </div>
       </div>
-      <div className="line" style={{ display: style.displayHideDrag }} />
+      <div className="line" style={{ display: styleDrag.displayHideDrag }} />
     </div>
   );
 };

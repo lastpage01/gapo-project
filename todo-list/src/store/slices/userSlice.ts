@@ -11,6 +11,7 @@ export const userSlider = createSlice({
   name: "users",
   initialState,
   reducers: {
+    getMe() {},
     login(state, action: PayloadAction<Login>) {},
     loginActionSuccess(state, action: PayloadAction<LoginSuccess>) {
       state.isLoggedIn = true;
@@ -37,6 +38,7 @@ export const {
   loginActionFail,
   logout,
   actionChangeName,
+  getMe,
 } = userSlider.actions;
 
 export default userSlider.reducer;

@@ -10,10 +10,16 @@ import {
 } from "../../helpers/validatorDate";
 import { InputField } from "@gapo_ui/components";
 
-interface Props{
-  setFullDate:(val:{ date: number; month: number; year: number })=>void
+interface Props {
+  setFullDate: (val: { date: number; month: number; year: number }) => void;
 }
-const Calendar = ({ setFullDate }:Props):JSX.Element => {
+interface Time {
+  day: number;
+  date: number;
+  month: number;
+  year: number;
+}
+const Calendar = ({ setFullDate }: Props): JSX.Element => {
   const [day, setDay] = useState(new Date().getDay());
   const [date, setDate] = useState(new Date().getDate());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -48,7 +54,7 @@ const Calendar = ({ setFullDate }:Props):JSX.Element => {
     });
   };
 
-  const setCalendar = (time) => {
+  const setCalendar = (time: Time) => {
     setDay(time.day);
     setDate(time.date);
     setMonth(time.month);
@@ -78,7 +84,7 @@ const Calendar = ({ setFullDate }:Props):JSX.Element => {
           type="date"
           value={valuePicker}
           className="datePicker"
-          onChange={onChangeDatePicker}
+          onChange={(e) => onChangeDatePicker(e)}
         />
       </div>
     </>

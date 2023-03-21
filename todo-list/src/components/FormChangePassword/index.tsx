@@ -12,9 +12,9 @@ import { RootState } from "../../store";
 
 import "./style.css";
 const ChangePassword = (): JSX.Element => {
-  const currentPass = useInput(validatePassword);
-  const newPass = useInput(validatePassword);
-  const confirmPass = useInput(validatePassword);
+  const currentPass = useInput('',validatePassword);
+  const newPass = useInput('',validatePassword);
+  const confirmPass = useInput('',validatePassword);
 
   const { email } = useSelector((state: RootState) => state.users);
 
@@ -33,9 +33,9 @@ const ChangePassword = (): JSX.Element => {
       await changePassword(email!, currentPass.Value, newPass.Value)
         .then((data) => {
           alert("Save new password success");
-          currentPass.setValue("");
-          newPass.setValue("");
-          confirmPass.setValue("");
+          currentPass.reset();
+          newPass.reset();
+          confirmPass.reset();
         })
         .catch((e) => {
           currentPass.setHelperText(e.response.data);

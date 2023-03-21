@@ -19,8 +19,8 @@ type Props = {
 };
 
 const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
-  const emailState = useInput(validateEmail);
-  const passwordState = useInput(validatePassword);
+  const emailState = useInput('',validateEmail);
+  const passwordState = useInput('',validatePassword);
 
   const dispatch = useDispatch();
   const { message } = useSelector((state: RootState) => state.message);

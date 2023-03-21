@@ -4,6 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   callApiLogin,
   changeFullName,
+  getMe,
   signOut,
 } from "../../services/users.service";
 import { clearMessage, setMessage } from "../slices/messageSlice";
@@ -13,33 +14,46 @@ import { ChangeName, Login } from "../interface/user";
 export function* loginSaga(action: PayloadAction<Login>) {
   const { email, password } = action.payload;
   try {
-    const user = yield call(callApiLogin, email, password);
-    if (user.existed) {
-      yield put(loginActionSuccess(user));
-      yield put(clearMessage());
+    const res = yield call(callApiLogin, email, password);
+    if (res.existed) {
+      const { data } = yield call(getMe);
+      if (data) {
+        yield put(
+          loginActionSuccess({ email: data.email, username: data.fullName })
+        );
+        yield put(clearMessage());
+      }
     } else {
       yield put(loginActionFail());
-      yield put(setMessage(user.message));
+      yield put(setMessage(res.message));
     }
   } catch (err) {
     console.log(err);
   }
-  //
 }
 
 export function* logoutSaga() {
   yield call(signOut);
 }
 
-export function* changName(action:PayloadAction<ChangeName>) {
+export function* changName(action: PayloadAction<ChangeName>) {
   const { email, newName } = action.payload;
   try {
     yield call(changeFullName, email, newName);
-    const user = JSON.parse(localStorage.getItem("user")!);
-    user.username = newName;
-    localStorage.setItem("user", JSON.stringify(user));
-    yield put(loginActionSuccess(user));
+    yield put(loginActionSuccess({ email, username: newName }));
   } catch (err) {
     console.log(err);
+  }
+}
+
+export function* getMeSaga() {
+  try {
+    const { data } = yield call(getMe);
+    if (data) 
+      yield put(
+        loginActionSuccess({ email: data.email, username: data.fullName })
+      );
+  } catch (err) {
+    yield call(signOut)
   }
 }

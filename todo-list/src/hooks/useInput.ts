@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useCallback } from "react";
 interface UseInput {
   Value: string;
   setValue: (val: string) => void;
@@ -7,19 +7,38 @@ interface UseInput {
   helperText: string;
   isErr: boolean;
   err: (defineErr?: boolean) => boolean;
+  reset: () => void;
 }
-export const useInput = (validate: (value: string) => string): UseInput => {
-  const [Value, setValue] = useState("");
-  const [helperText, setHelperText] = useState("");
-  const [isErr, setIsErr] = useState(false);
+export const useInput = (
+  value: string = "",
+  validate?: (value: string) => string
+): UseInput => {
+  const [Value, setValue] = useState<string>(value);
+  const [helperText, setHelperText] = useState<string>("");
+  const [isErr, setIsErr] = useState<boolean>(false);
 
   const err = (defineErr?: boolean): boolean => {
     if (defineErr) return !!defineErr;
+    if (!validate) return false;
     const errText = validate(Value);
     setHelperText(errText);
     setIsErr(!!errText);
     return !!errText;
   };
+  const reset = useCallback(() => {
+    setValue("");
+    setHelperText("");
+    setIsErr(false);
+  }, []);
 
-  return { Value, setValue, setHelperText, setIsErr, helperText, isErr, err };
+  return {
+    Value,
+    setValue,
+    setHelperText,
+    setIsErr,
+    helperText,
+    isErr,
+    err,
+    reset,
+  };
 };

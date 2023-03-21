@@ -15,7 +15,7 @@ import {
 
 const taskRouter = express.Router();
 
-taskRouter.get("/",authenticateToken, (req, res) => {
+taskRouter.get("/", (req, res) => {
   getAllTask().then((data) => {
     res.json({ count: data.length, tasks: data });
   });

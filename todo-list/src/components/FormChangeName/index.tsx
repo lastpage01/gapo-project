@@ -11,10 +11,11 @@ import "./style.css";
 
 const ChangeName = (): JSX.Element => {
   const { email, username } = useSelector((state: RootState) => state.users);
-  const nameState = useInput(validateFullName);
+  const nameState = useInput('',validateFullName);
+  
 
   useEffect(() => {
-    nameState.setValue(username!);
+    if(username) nameState.setValue(username);
   }, [username]);
 
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const ChangeName = (): JSX.Element => {
           type={"text"}
           label={"Full Name"}
           value={nameState.Value}
+          // defaultValue={username!}
           placeholder={"Enter Full Name"}
           fullWidth
           onChange={onChangeFullName}

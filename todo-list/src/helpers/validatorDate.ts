@@ -33,10 +33,16 @@ export const validateDate = (
   date: number,
   month: number,
   year: number
-): ValidateDate | null => {
+): ValidateDate => {
   let d, m, y;
   const t = day < 0 ? 6 : day > 6 ? 0 : day;
-  if (month > 12 || month < 1 || year < 0) return null;
+  if (month > 12 || month < 1 || year < 0)
+    return {
+      day: new Date().getDay(),
+      date: new Date().getDate(),
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
+    };
   const months = [
     31,
     28 + isLeapYear(year),

@@ -16,9 +16,9 @@ type TypeProps = {
 };
 
 const SignUp = (props: TypeProps): JSX.Element => {
-  const emailState = useInput(validateEmail);
-  const nameState = useInput(validateFullName);
-  const passState = useInput(validatePassword);
+  const emailState = useInput('',validateEmail);
+  const nameState = useInput('',validateFullName);
+  const passState = useInput('',validatePassword);
 
   const onChangeEmail = (e) => {
     emailState.setValue(e.target.value);

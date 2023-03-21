@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Avatar } from "@gapo_ui/components";
 import { IoMdSettings } from "react-icons/io";
 import { BiLogIn } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./style.css";
 import { logout } from "../../store/slices/userSlice";
 
 import { RootState } from "../../store";
-import { isLogin } from "../../helpers/authentication";
 type Props = {
   title: string;
   icon: JSX.Element | null;
 };
 const Header = (props: Props): JSX.Element => {
-  const [disable, setDisable] = useState(false);
+  const [disable, setDisable] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const navigator = useNavigate();
-  const { username, isLoggedIn } = useSelector(
-    (state: RootState) => state.users
-  );
-
-  useEffect(() => {
-    if (!isLogin(dispatch)) navigator("/");
-  }, [dispatch, isLoggedIn, navigator]);
+  const { username } = useSelector((state: RootState) => state.users);
 
   const handleEventDisplay = () => {
     setDisable((prev) => {
@@ -37,7 +29,7 @@ const Header = (props: Props): JSX.Element => {
   const handleLogOut = () => {
     dispatch(logout());
   };
-  
+
   return (
     <div className="wrapper-header">
       <Link
@@ -68,10 +60,10 @@ const Header = (props: Props): JSX.Element => {
               <span>Setting</span>
             </Link>
             <div className="line" />
-            <Link to={"/"} className="signUp" onClick={handleLogOut}>
+            <div className="signUp" onClick={handleLogOut}>
               <BiLogIn size={20} />
               <span> Sign Out</span>
-            </Link>
+            </div>
           </div>
         )}
       </div>
