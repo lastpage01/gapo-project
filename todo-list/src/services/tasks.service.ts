@@ -1,17 +1,23 @@
 import axios from "axios";
 export const setToken = () => {
   let token = JSON.parse(localStorage.getItem("token")!);
-  token = token ? token :'';
+  token = token ? token : "";
   return {
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: `Bearer ${token}`,
   };
 };
-export const retrieveTaskByEmailAndDate = (email: string, date: string) => {
+export const retrieveTaskByEmailAndDate = (
+  email: string,
+  date: string,
+  page?: number,
+  // skip?: number,
+  limit?: number,
+) => {
   return axios({
     method: "get",
-    url: `http://localhost:3000/api/tasks/dateAndEmail?email=${email}&date=${date}`,
+    url: `http://localhost:3000/api/tasks/getTaskByDateAndEmail?email=${email}&date=${date}&page=${page}&limit=${limit}`,
     headers: setToken(),
   });
 };

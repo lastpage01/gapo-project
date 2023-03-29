@@ -12,9 +12,9 @@ import { RootState } from "../../store";
 
 import "./style.css";
 const ChangePassword = (): JSX.Element => {
-  const currentPass = useInput('',validatePassword);
-  const newPass = useInput('',validatePassword);
-  const confirmPass = useInput('',validatePassword);
+  const currentPass = useInput("", validatePassword);
+  const newPass = useInput("", validatePassword);
+  const confirmPass = useInput("", validatePassword);
 
   const { email } = useSelector((state: RootState) => state.users);
 
@@ -30,7 +30,7 @@ const ChangePassword = (): JSX.Element => {
 
   const handleSaveChangePassword = async (e) => {
     if (isErr() === false) {
-      await changePassword(email!, currentPass.Value, newPass.Value)
+      await changePassword(email!, currentPass.value, newPass.value)
         .then((data) => {
           alert("Save new password success");
           currentPass.reset();
@@ -44,11 +44,11 @@ const ChangePassword = (): JSX.Element => {
     }
   };
 
-  const isErr = ():boolean => {
-    if (!currentPass.err() && newPass.Value === currentPass.Value) {
+  const isErr = (): boolean => {
+    if (!currentPass.err() && newPass.value === currentPass.value) {
       newPass.setHelperText("Do not duplicate current password");
       newPass.setIsErr(true);
-      return newPass.err(true);
+      return true;
     }
     return checkErrValidateForm(
       currentPass.err(),
@@ -56,10 +56,10 @@ const ChangePassword = (): JSX.Element => {
       checkErrConfirmPass()
     );
   };
-  const checkErrConfirmPass = ():boolean => {
-    let err = isEmpty(confirmPass.Value);
+  const checkErrConfirmPass = (): boolean => {
+    let err = isEmpty(confirmPass.value).errText;
     if (!err)
-      err = confirmPass.Value === newPass.Value ? "" : "Invalid password";
+      err = confirmPass.value === newPass.value ? "" : "Invalid password";
     confirmPass.setHelperText(err);
     confirmPass.setIsErr(!!err);
     return !!err;
@@ -77,7 +77,7 @@ const ChangePassword = (): JSX.Element => {
             onChange={onChangeCurrentPassword}
             helperText={currentPass.helperText}
             error={currentPass.isErr}
-            value={currentPass.Value}
+            value={currentPass.value}
           />
         </div>
         <div className="wrapper-input">
@@ -89,7 +89,7 @@ const ChangePassword = (): JSX.Element => {
             onChange={onChangeNewPassword}
             helperText={newPass.helperText}
             error={newPass.isErr}
-            value={newPass.Value}
+            value={newPass.value}
           />
         </div>
         <div className="wrapper-input">
@@ -101,7 +101,7 @@ const ChangePassword = (): JSX.Element => {
             onChange={onChangeConfirmPassword}
             helperText={confirmPass.helperText}
             error={confirmPass.isErr}
-            value={confirmPass.Value}
+            value={confirmPass.value}
           />
         </div>
         <Button

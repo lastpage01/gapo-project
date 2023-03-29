@@ -32,7 +32,7 @@ const SignUp = (props: TypeProps): JSX.Element => {
 
   const handleRegister = async (e) => {
     if (isErr() === false) {
-      await register(emailState.Value, passState.Value, nameState.Value)
+      await register(emailState.value, passState.value, nameState.value)
         .then((data) => {
           alert("Register success");
           props.setAppearSignIn(true);
@@ -62,7 +62,7 @@ const SignUp = (props: TypeProps): JSX.Element => {
             className="fullName"
             fullWidth
             helperText={nameState.helperText}
-            value={nameState.Value}
+            value={nameState.value}
             error={nameState.isErr}
             onChange={onChangeFullName}
           />
@@ -76,7 +76,7 @@ const SignUp = (props: TypeProps): JSX.Element => {
             fullWidth
             onChange={onChangeEmail}
             helperText={emailState.helperText}
-            value={emailState.Value}
+            value={emailState.value}
             error={emailState.isErr}
           />
         </div>
@@ -89,7 +89,7 @@ const SignUp = (props: TypeProps): JSX.Element => {
             fullWidth
             onChange={onChangePassword}
             helperText={passState.helperText}
-            value={passState.Value}
+            value={passState.value}
             error={passState.isErr}
           />
         </div>

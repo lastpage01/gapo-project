@@ -1,5 +1,4 @@
 import express from "express";
-import { authenticateToken } from "../common/authentication";
 import {
   addNewTask,
   deleteTask,
@@ -28,12 +27,23 @@ taskRouter.get("/findById/:id", (req, res) => {
   });
 });
 
-taskRouter.get("/dateAndEmail", (req, res) => {
+taskRouter.get("/getTaskByDateAndEmail", (req, res) => {
   const date = new Date(req.query.date);
-  const email = req.query.email;
-  getTaskByDateAndEmail(date, email).then((data) => {
-    res.json({ count: data.length, tasks: data });
-  });
+  const { email, page, limit } = req.query;
+  // const regex =
+  // /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{1,4}$/;
+  // console.log(date.toLocaleDateString());
+  // console.log(regex.test(date.toLocaleDateString()));
+
+  // if (regex.test(date.toLocaleDateString()))
+  getTaskByDateAndEmail(date, email, page, limit)
+    .then((data) => {
+      res.json({ count: data.length, tasks: data });
+    })
+    .catch((e) => {
+      res.status(404).send("not found tasks");
+    });
+  // else res.send("Invalid Date");
 });
 
 taskRouter.post("/", (req, res) => {
@@ -65,12 +75,13 @@ taskRouter.put("/:id", (req, res) => {
       res.json({ data });
     })
     .catch((err) => {
-      throw err;
+      res.status(404).send("not found tasks");
     });
 });
 
 taskRouter.delete("/:id", (req, res) => {
   const { id } = req.params;
+  
   deleteTask(id)
     .then((dataDeleted) => {
       getVTLastOfDateAndEmail(dataDeleted.date, dataDeleted.email).then(
@@ -88,7 +99,7 @@ taskRouter.delete("/:id", (req, res) => {
       res.json(dataDeleted);
     })
     .catch((err) => {
-      throw err;
+      res.status(404).send('id not found')
     });
 });
 
@@ -116,7 +127,7 @@ const move = (id, vtNew, res) => {
       } else res.send("The new location must be different from the old one");
     })
     .catch((err) => {
-      throw err;
+      res.status(404).send('id not found')
     });
 };
 
@@ -125,7 +136,7 @@ const moveVTBeforeOrAfter = (task, vtNew) => {
     const index = task.vt > vtNew ? 1 : -1;
     data.forEach((element) => {
       moveTask(element._id, element.vt + index).catch((err) => {
-        throw err;
+        res.status(404).send('id not found')
       });
     });
   });

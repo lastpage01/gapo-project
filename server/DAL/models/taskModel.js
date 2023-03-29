@@ -18,8 +18,20 @@ export const getVTLastOfDateAndEmail = (date, email) => {
     .limit(1)
     .exec();
 };
-export const getTaskByDateAndEmail = (date, email) => {
-  return model.find({ date: date, email: email }).sort({ vt: 1 }).exec();
+export const getTaskByDateAndEmail = (date, email, page, limit) => {
+  const l = !!limit ? Number(limit) : 0;
+  const p =
+    !!page && Number(page) > 0
+      ? l > 0
+        ? (Number(page) - 1) * l
+        : Number(page)
+      : 0;
+  return model
+    .find({ date: date, email: email })
+    .sort({ vt: 1 })
+    .skip(p)
+    .limit(l)
+    .exec();
 };
 /////////////////////////////
 export const getTaskByDateAndEmailSkipLimitVT = (task, vtNew) => {

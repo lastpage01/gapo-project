@@ -24,8 +24,8 @@ const ChangeName = (): JSX.Element => {
     nameState.setValue(e.target.value);
   };
   const handleSaveChangeName = ():void => {
-    if (nameState.err() === false && nameState.Value.trim() !== username) {
-      dispatch(actionChangeName({ email: email!, newName: nameState.Value }));
+    if (nameState.err() === false && nameState.value.trim() !== username) {
+      dispatch(actionChangeName({ email: email!, newName: nameState.value }));
       alert("change name success");
     }
   };
@@ -37,7 +37,7 @@ const ChangeName = (): JSX.Element => {
           className="input-changeName"
           type={"text"}
           label={"Full Name"}
-          value={nameState.Value}
+          value={nameState.value}
           // defaultValue={username!}
           placeholder={"Enter Full Name"}
           fullWidth

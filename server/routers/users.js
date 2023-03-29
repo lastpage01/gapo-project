@@ -18,7 +18,7 @@ userRouter.get("/", (req, res) => {
   });
 });
 
-userRouter.get("/getMe",authenticateToken, (req, res) => {
+userRouter.get("/getMe", authenticateToken, (req, res) => {
   const { email } = req.user;
   getMe(email)
     .then((data) => {
@@ -35,7 +35,7 @@ userRouter.post("/signIn", (req, res) => {
     .then((data) => {
       if (data.length > 0) {
         let token = generateAccessToken(email);
-        res.json({ existed: true, token: token});
+        res.json({ existed: true, token: token, username: data[0].fullName });
       } else res.send({ message: "Login failed!" });
     })
     .catch((err) => {
@@ -66,7 +66,7 @@ userRouter.put("/changeFullName", (req, res) => {
     if (data.length > 0) {
       changeFullName(data[0].id, newFullName)
         .then((data) => {
-          res.json( data );
+          res.json(data);
         })
         .catch((err) => {
           res.send(err);

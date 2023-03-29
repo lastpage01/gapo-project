@@ -1,4 +1,4 @@
-export interface Task {
+export interface TaskItemType {
   _id: string;
   id: number;
   title: string;
@@ -7,11 +7,23 @@ export interface Task {
   email: string;
   date: string;
 }
+export interface TaskState {
+  taskList: TaskItemType[];
+  isTask: boolean;
+}
 
 export interface TaskAction {
   email: string;
   date: string;
+  isMoveDate?: boolean;
   title?: string;
+  page?: number;
+  limit?: number;
+}
+export interface TaskRetrieve {
+  taskList: TaskItemType[];
+  isMoveDate: boolean;
+  isTask: boolean;
 }
 
 export interface TaskUpdate {
@@ -26,6 +38,6 @@ export interface TaskMove {
   vtNew: number;
 }
 export interface TaskMoveSuccess {
-    vtOld: number;
-    vtNew: number;
-  }
+  vtOld: number;
+  vtNew: number;
+}

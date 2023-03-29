@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useContext } from "react";
 import { IconIc24Fill6dotVertical } from "@gapo_ui/icon";
 import { IconIc24FillCheckmarkCircle } from "@gapo_ui/icon";
 import { IconIc24FillTrash } from "@gapo_ui/icon";
@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 
 import "./style.css";
 import { updateTaskAction } from "../../store/slices/taskSlice";
+import { HomeContext } from "../../pages/home";
 
 interface Props {
   task: {
@@ -18,26 +19,26 @@ interface Props {
     id: number;
     date: string;
   };
-  setShowMessage: (value: boolean) => void;
-  setIdRemove: (value: string | null) => void;
   styleDrag: {
     displayShowDrag: "block";
     displayHideDrag: "none";
   };
 }
 
-const TaskItem = ({ task, setShowMessage, setIdRemove, styleDrag }: Props) => {
+const TaskItem = ({ task, styleDrag }: Props) => {
   const { title, status } = task;
   const id = task._id;
 
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [updateTask, setUpdateTask] = useState(title);
   const [updateStatus, setUpdateStatus] = useState(status);
+  const { setShowMessage, setIdRemove } = useContext(HomeContext);
 
   const dispatch = useDispatch();
 
   const handleDeleteTask = () => {
     setShowMessage(true);
+
     setIdRemove(id);
   };
 
@@ -64,6 +65,8 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, styleDrag }: Props) => {
     setUpdateStatus(!status);
     dispatch(updateTaskAction({ id, title, status: !status }));
   };
+  // console.log("re-render");
+
   return (
     <div className="wrapper-task-item">
       <div className="task-item">
@@ -115,4 +118,4 @@ const TaskItem = ({ task, setShowMessage, setIdRemove, styleDrag }: Props) => {
   );
 };
 
-export default TaskItem;
+export default memo(TaskItem);

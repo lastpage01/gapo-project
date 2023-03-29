@@ -7,6 +7,7 @@ export interface UserState {
 export interface Login {
   email: string;
   password: string;
+  success:()=>void
 }
 
 export interface LoginSuccess {
@@ -17,4 +18,8 @@ export interface LoginSuccess {
 export interface ChangeName {
   email: string;
   newName: string;
+}
+
+export interface GetMe {
+  onErr: () => void;
 }

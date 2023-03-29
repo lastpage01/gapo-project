@@ -13,16 +13,18 @@ import { login } from "../../store/slices/userSlice";
 import { clearMessage } from "../../store/slices/messageSlice";
 import { RootState } from "../../store";
 import { useInput } from "../../hooks/useInput";
+import { useNavigate } from "react-router";
 
 type Props = {
-  setAppearSignIn: (val:boolean)=>void;
+  setAppearSignIn: (val: boolean) => void;
 };
 
 const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
-  const emailState = useInput('',validateEmail);
-  const passwordState = useInput('',validatePassword);
+  const emailState = useInput("", validateEmail);
+  const passwordState = useInput("", validatePassword);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { message } = useSelector((state: RootState) => state.message);
 
   const handleAppearRegister = () => {
@@ -39,7 +41,13 @@ const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
   const handleLogin = (e) => {
     if (isErr() === false) {
       dispatch(
-        login({ email: emailState.Value, password: passwordState.Value })
+        login({
+          email: emailState.value,
+          password: passwordState.value,
+          success: () => {
+            navigate("/");
+          },
+        })
       );
     } else {
       dispatch(clearMessage());
@@ -61,7 +69,7 @@ const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
             className="email"
             fullWidth
             onChange={onChangeEmail}
-            value={emailState.Value}
+            value={emailState.value}
             helperText={emailState.helperText}
             error={emailState.isErr}
           />
@@ -76,7 +84,7 @@ const SignIn = ({ setAppearSignIn }: Props): JSX.Element => {
             onChange={onChangePassword}
             helperText={passwordState.helperText}
             error={passwordState.isErr}
-            value={passwordState.Value}
+            value={passwordState.value}
           />
         </div>
         <div style={{ color: "red", marginBottom: "10px" }}>{message}</div>

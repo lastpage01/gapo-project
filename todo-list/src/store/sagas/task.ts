@@ -13,21 +13,33 @@ import {
   moveTaskSuccessUp,
   retrieveTaskAction,
 } from "../slices/taskSlice";
-import { TaskAction, TaskMove, TaskUpdate } from "../interface/task";
+import { TaskAction, TaskMove, TaskUpdate } from "../types/task";
 import { logout } from "../slices/userSlice";
 
 export function* task(action: PayloadAction<TaskAction>) {
-  const { email, date, title } = action.payload;
+  const { email, date, title, page = 0, limit, isMoveDate } = action.payload;
   try {
     if (title) {
       const res = yield call(createTaskByEmailAndDate, email, date, title);
       yield put(createTaskAction(res.data));
     } else {
-      const res = yield call(retrieveTaskByEmailAndDate, email, date);
-      yield put(retrieveTaskAction(res.data.tasks));
+      const res = yield call(
+        retrieveTaskByEmailAndDate,
+        email,
+        date,
+        page,
+        limit
+      );
+      yield put(
+        retrieveTaskAction({
+          taskList: res.data.tasks,
+          isMoveDate: !!isMoveDate,
+          isTask: res.data.tasks.length < limit! ? false : true,
+        })
+      );
     }
   } catch (e) {
-    if (e.response.status === 403 || e.response.status === 401) {
+    if (e.response.status === 403) {
       yield alert("Login session has expired");
       yield put(logout());
     } else {
@@ -41,7 +53,7 @@ export function* deleteTask(action: PayloadAction<string>) {
   try {
     yield call(deleteTaskById, id);
   } catch (e) {
-    if (e.response.status === 403 || e.response.status === 401) {
+    if (e.response.status === 403) {
       alert("Login session has expired");
       yield put(logout());
     } else {
@@ -56,7 +68,7 @@ export function* updateTask(action: PayloadAction<TaskUpdate>) {
   try {
     yield call(updateTaskById, id, { title, status });
   } catch (e) {
-    if (e.response.status === 403 || e.response.status === 401) {
+    if (e.response.status === 403) {
       alert("Login session has expired");
       yield put(logout());
     } else {
@@ -72,7 +84,7 @@ export function* moveTask(action: PayloadAction<TaskMove>) {
     else yield put(moveTaskSuccessDown({ vtOld, vtNew }));
     yield call(moveTaskByIdAndVtNew, id, vtNew);
   } catch (e) {
-    if (e.response.status === 403 || e.response.status === 401) {
+    if (e.response.status === 403) {
       alert("Login session has expired");
       yield put(logout());
     } else {

@@ -1,30 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
-  Task,
+  TaskItemType,
   TaskAction,
   TaskMove,
   TaskMoveSuccess,
+  TaskState,
   TaskUpdate,
-} from "../interface/task";
-
-export interface TaskState {
-  taskList: Task[];
-}
+  TaskRetrieve,
+} from "../types/task";
 
 const initialState: TaskState = {
   taskList: [],
+  isTask: true,
 };
 export const taskSlider = createSlice({
   name: "tasks",
   initialState,
   reducers: {
     taskAction(state, action: PayloadAction<TaskAction>) {},
-    createTaskAction(state, action: PayloadAction<Task>) {
+    createTaskAction(state, action: PayloadAction<TaskItemType>) {
       state.taskList.push(action.payload);
     },
-    retrieveTaskAction(state, action: PayloadAction<Task[]>) {
-      state.taskList = action.payload;
+    retrieveTaskAction(state, action: PayloadAction<TaskRetrieve>) {
+      if (action.payload.isMoveDate) state.taskList = action.payload.taskList;
+      else state.taskList = [...state.taskList, ...action.payload.taskList];
+      state.isTask = action.payload.isTask;
     },
     deleteTaskAction(state, action: PayloadAction<string>) {
       state.taskList = state.taskList.filter(

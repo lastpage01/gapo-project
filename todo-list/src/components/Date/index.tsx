@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useEffect, useState } from "react";
 import { IconIc24FillArrowheadLeft } from "@gapo_ui/icon";
 import { IconIc24FillArrowheadRight } from "@gapo_ui/icon";
@@ -20,11 +21,11 @@ interface Time {
   year: number;
 }
 const Calendar = ({ setFullDate }: Props): JSX.Element => {
-  const [day, setDay] = useState(new Date().getDay());
-  const [date, setDate] = useState(new Date().getDate());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [valuePicker, setValuePicker] = useState(
+  const [day, setDay] = useState<number>(new Date().getDay());
+  const [date, setDate] = useState<number>(new Date().getDate());
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+  const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [valuePicker, setValuePicker] = useState<string>(
     convertValueDateToString(date, month, year)
   );
   useEffect(() => {
@@ -44,14 +45,19 @@ const Calendar = ({ setFullDate }: Props): JSX.Element => {
 
   const onChangeDatePicker = (e) => {
     setValuePicker(e.target.value);
+    const regex =
+      /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{1,4}$/;
+      
+    const DateStringPicker = new Date(e.target.value).toLocaleDateString();
     const dayPicker = new Date(e.target.value).getDay();
-    const valueInput = e.target.value.split("-");
-    setCalendar({
-      day: dayPicker,
-      date: Number(valueInput[2]),
-      month: Number(valueInput[1]),
-      year: Number(valueInput[0]),
-    });
+    const convertDateToArray = e.target.value.split("-");
+    if (regex.test(DateStringPicker))
+      setCalendar({
+        day: dayPicker,
+        date: Number(convertDateToArray[2]),
+        month: Number(convertDateToArray[1]),
+        year: Number(convertDateToArray[0]),
+      });
   };
 
   const setCalendar = (time: Time) => {

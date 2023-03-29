@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IconIc24Line15CheckMarkCircle } from "@gapo_ui/icon";
 import { IconIc24FillChevronLeft } from "@gapo_ui/icon";
 import Header from "../components/Header";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch } from "react-redux";
+import { getMe } from "../store/slices/userSlice";
 import { useNavigate } from "react-router";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../store";
 const titleValueAndIcon = (
   page: string
 ): { title: string; icon: JSX.Element | null } => {
@@ -27,18 +29,21 @@ const titleValueAndIcon = (
   }
 };
 type Layout = {
-  child: JSX.Element;
+  children: JSX.Element;
   page: string;
 };
-const DefaultLayout = ({ child, page }: Layout): JSX.Element => {
+const DefaultLayout = ({ children, page }: Layout): JSX.Element => {
   const { title, icon } = titleValueAndIcon(page);
-  const { isLoggedIn } = useSelector((state: RootState) => state.users);
-  const navigator = useNavigate()
-  if (!isLoggedIn) navigator("/");
+  // const { isLoggedIn } = useSelector((state: RootState) => state.users);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMe({ onErr: () => navigate("/login") }));
+  }, [dispatch, navigate]);
   return (
     <>
       <Header title={title} icon={icon} />
-      {child}
+      {children}
     </>
   );
 };

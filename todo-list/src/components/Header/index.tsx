@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar } from "@gapo_ui/components";
 import { IoMdSettings } from "react-icons/io";
 import { BiLogIn } from "react-icons/bi";
@@ -29,11 +29,11 @@ const Header = (props: Props): JSX.Element => {
   const handleLogOut = () => {
     dispatch(logout());
   };
-
+  useEffect(() => {}, []);
   return (
     <div className="wrapper-header">
       <Link
-        to={"/home"}
+        to={"/"}
         className="wrapper-header-left"
         onClick={handleEventDisplayNone}
       >
@@ -60,10 +60,10 @@ const Header = (props: Props): JSX.Element => {
               <span>Setting</span>
             </Link>
             <div className="line" />
-            <div className="signUp" onClick={handleLogOut}>
+            <Link to={"/login"} className="signUp" onClick={handleLogOut}>
               <BiLogIn size={20} />
               <span> Sign Out</span>
-            </div>
+            </Link>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { ChangeName, Login, LoginSuccess, UserState } from "../interface/user";
+import { ChangeName, GetMe, Login, LoginSuccess, UserState } from "../types/user";
 
 const initialState: UserState = {
   isLoggedIn: false,
@@ -11,7 +11,7 @@ export const userSlider = createSlice({
   name: "users",
   initialState,
   reducers: {
-    getMe() {},
+    getMe(state,action:PayloadAction<GetMe>) {},
     login(state, action: PayloadAction<Login>) {},
     loginActionSuccess(state, action: PayloadAction<LoginSuccess>) {
       state.isLoggedIn = true;

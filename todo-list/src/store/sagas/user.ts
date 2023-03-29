@@ -8,21 +8,17 @@ import {
   signOut,
 } from "../../services/users.service";
 import { clearMessage, setMessage } from "../slices/messageSlice";
-import { loginActionFail, loginActionSuccess } from "../slices/userSlice";
-import { ChangeName, Login } from "../interface/user";
+import { loginActionFail, loginActionSuccess, logout } from "../slices/userSlice";
+import { ChangeName, GetMe, Login } from "../types/user";
 
 export function* loginSaga(action: PayloadAction<Login>) {
-  const { email, password } = action.payload;
+  const { email, password ,success} = action.payload;
   try {
     const res = yield call(callApiLogin, email, password);
     if (res.existed) {
-      const { data } = yield call(getMe);
-      if (data) {
-        yield put(
-          loginActionSuccess({ email: data.email, username: data.fullName })
-        );
-        yield put(clearMessage());
-      }
+      yield put(loginActionSuccess({ email: email, username: res.username }));
+      yield put(clearMessage());
+      yield call(success)
     } else {
       yield put(loginActionFail());
       yield put(setMessage(res.message));
@@ -42,18 +38,28 @@ export function* changName(action: PayloadAction<ChangeName>) {
     yield call(changeFullName, email, newName);
     yield put(loginActionSuccess({ email, username: newName }));
   } catch (err) {
-    console.log(err);
+    if (err.response.status === 403 ) {
+      alert("Login session has expired");
+      yield put(logout());
+    } else {
+      console.log(err);
+    }
   }
 }
 
-export function* getMeSaga() {
+export function* getMeSaga(action: PayloadAction<GetMe>) {
+  const {onErr} = action.payload
   try {
-    const { data } = yield call(getMe);
-    if (data) 
-      yield put(
-        loginActionSuccess({ email: data.email, username: data.fullName })
-      );
+    let token = JSON.parse(localStorage.getItem("token")!);
+    if (token) {
+      const { data } = yield call(getMe);
+      if (data)
+        yield put(
+          loginActionSuccess({ email: data.email, username: data.fullName })
+        );
+    }
   } catch (err) {
-    yield call(signOut)
+    yield put(logout());
+    yield call(onErr)
   }
 }

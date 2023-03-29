@@ -1,129 +1,73 @@
-import { InputField } from "@gapo_ui/components";
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import "./style.css";
-import TaskItem from "./TaskItem";
-import { isEmpty } from "../../helpers/validator";
-import { moveTaskAction, taskAction } from "../../store/slices/taskSlice";
+import { taskAction } from "../../store/slices/taskSlice";
 import { RootState } from "../../store";
-import { useInput } from "../../hooks/useInput";
+import InputAddTask from "./InputAddTask";
+import InfiniteScroll from "react-infinite-scroll-component";
+import TaskDND from "./TaskDND";
 interface Props {
   fullDate: { date: number; month: number; year: number };
-  setShowMessage: (value: boolean) => void;
-  setIdRemove: (value: null | string) => void;
 }
-const getItemStyle = (isDragging: boolean, draggableStyle) => ({
-  border: isDragging ? "1px solid rgb(189, 203, 210)" : "",
-  background: isDragging ? "rgb(200, 200, 198)" : "",
-  ...draggableStyle,
-});
+const LIMIT = 8;
 
-const Task = ({
-  fullDate,
-  setShowMessage,
-  setIdRemove,
-}: Props): JSX.Element => {
+const Task = ({ fullDate }: Props): JSX.Element => {
   const dispatch = useDispatch();
-  const taskState = useInput("", isEmpty);
 
   const { email } = useSelector((state: RootState) => state.users);
-  const tasks = useSelector((state: RootState) => state.tasks.taskList);
   const date = `${fullDate.year}/${fullDate.month}/${fullDate.date}`;
 
+  const tasks = useSelector((state: RootState) => state.tasks.taskList);
+  const isTask = useSelector((state: RootState) => state.tasks.isTask);
+
   useEffect(() => {
-    dispatch(taskAction({ email: email!, date }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date, dispatch]);
-  
-  const onChangeNewTask = (e) => {
-    taskState.setValue(e.target.value);
+    dispatch(
+      taskAction({
+        email: email!,
+        date,
+        page: 1,
+        limit: LIMIT,
+        isMoveDate: true,
+      })
+    );
+  }, [date, dispatch, email]);
+  const fetchMoreData = () => {
+    dispatch(
+      taskAction({
+        email: email!,
+        date,
+        page: tasks.length / LIMIT + 1,
+        limit: LIMIT,
+        isMoveDate: false,
+      })
+    );
   };
-  const onKeyDownEnter = (e) => {
-    if (e.keyCode === 13) {
-      if (taskState.err() === false) {
-        dispatch(taskAction({ email: email!, date, title: taskState.Value }));
-        taskState.reset();
-      }
-    }
-  };
-  const handleLosesFocus = (): void => {
-    taskState.reset();
-  };
-  const handleDropEnd = (result) => {
-    if (!result.destination) return;
-    const id = result.draggableId;
-    const vtOld = result.source.index;
-    const vtNew = result.destination.index;
-    if (!!id && !!vtOld && !!vtNew)
-      dispatch(moveTaskAction({ id, vtOld, vtNew }));
-  };
+  // console.log('re-render');
+
   return (
     <div className="wrapper-list-item">
-      <DragDropContext onDragEnd={handleDropEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{ width: "100%" }}
-            >
-              {tasks &&
-                tasks.map((task) => {
-                  return (
-                    <Draggable
-                      key={task._id}
-                      draggableId={task._id}
-                      index={task.vt}
-                    >
-                      {(provided, snapshot) => {
-                        return (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                          >
-                            <TaskItem
-                              key={task.id}
-                              setShowMessage={setShowMessage}
-                              setIdRemove={setIdRemove}
-                              task={task}
-                              styleDrag={{
-                                displayShowDrag: snapshot.isDragging && "block",
-                                displayHideDrag: snapshot.isDragging && "none",
-                              }}
-                            />
-                          </div>
-                        );
-                      }}
-                    </Draggable>
-                  );
-                })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <InfiniteScroll
+        dataLength={tasks.length}
+        next={fetchMoreData}
+        hasMore={isTask}
+        loader={
+          tasks.length ? (
+            <h4 style={{ textAlign: "center" }}>Loading...</h4>
+          ) : (
+            ""
+          )
+        }
+        className="infinite-scroll"
+        style={{ width: "800px", overflow: "none" }}
+      >
+        <TaskDND tasks={tasks} />
+      </InfiniteScroll>
       <div className="add-task">
-        <InputField
-          placeholder="Add task..."
-          variant={tasks.length > 0 ? "invisible" : "outlined"}
-          fullWidth
-          onChange={onChangeNewTask}
-          onKeyDown={onKeyDownEnter}
-          value={taskState.Value}
-          helperText={taskState.helperText}
-          error={taskState.isErr}
-          onBlur={handleLosesFocus}
-        />
+        <InputAddTask email={email!} date={date} countTasks={tasks.length} />
       </div>
     </div>
   );
 };
 
-export default Task;
+export default memo(Task);
