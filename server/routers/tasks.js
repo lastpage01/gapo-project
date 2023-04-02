@@ -139,6 +139,8 @@ const moveVTBeforeOrAfter = (task, vtNew) => {
         res.status(404).send('id not found')
       });
     });
+  }).catch((e)=>{
+    res.status(404).send('Array task not found')
   });
 };
 /////////////////////////
